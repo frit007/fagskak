@@ -16,6 +16,7 @@ socket.on('connection', function() {
 })
 
     socket.emit("getTeams", {})
+    socket.emit("getTeamOptions",{});
 // $(document).ready(function() {
 //     $('#users').DataTable({
 //         "paging":   false,
@@ -45,7 +46,7 @@ function drawTeams(newTeams) {
         var team = newTeams[key];
         team.location = team.playable ?users_segment : locked_segment;
         console.log(team)
-        teams[team.id] = new TeamTable(team);
+        teams[team.id] = new TeamTable(team, socket, info);
     }
 
 }
@@ -56,12 +57,13 @@ socket.on('teams', function(teams) {
 })
 
 socket.on('team', function(updatedTeam) {
-    console.log("team, ", team);
+    console.log("team, ", updatedTeam);
     var team = teams[updatedTeam.id];
     if (team) {
-        team.update(updatedTeam);    
+        team.update(updatedTeam);
     } else {
-        
+        updatedTeam.location = updatedTeam.playable ?users_segment : locked_segment;
+        teams[updatedTeam.id] = new TeamTable(updatedTeam, socket, info);
     }
 })
 
@@ -72,11 +74,34 @@ socket.on("removeTeam", function(teamid) {
     delete teams[teamid]
 })
 
+socket.on("teamOptions", function(teamOptions){
+    console.log("teamOptions, ", teamOptions);
+    if (teamOptions.playable) {
+        $("#spectator_menu").addClass("hidden");
+        $("#team_menu").removeClass("hidden").click();
+
+
+        $("#team_name").val(teamOptions.name);
+        $("#team_color").val(teamOptions.color);
+
+        $("#team_update").off('click').on('click', function() {
+            socket.emit("teamUpdate", {
+                name: $("#team_name").val(),
+                color: $("#team_color").val(),
+            })
+        })
+
+    } else {
+        $("#spectator_menu").removeClass("hidden").click();
+        $("#team_menu").addClass("hidden");
+        
+        
+    }
+})
 
 $("#new_team").on('click', function() {
     socket.emit("createTeam", {});
 })
-
 
 // var spectator = new TeamTable({
 //     location: locked_segment,

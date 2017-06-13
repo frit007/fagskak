@@ -43,8 +43,9 @@ module.exports = function(users) {
 
 				// res.cookie("authentication", response.secret, {maxAge:900000, httpOnly: true});
 				req.session.user = {id: userResponse.id, display_name: userResponse.display_name};
-
-    			res.redirect("/lobbies");
+				if (!res.headersSent) {
+    				res.redirect("/lobbies");
+				}
             })
 
 			// res.cookie("oauthCode",response, {maxAge:9000000, httpOnly:true});

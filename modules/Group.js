@@ -47,9 +47,9 @@ var Group = Group || (function() {
                 // if removeBindings is true remove all socket bindings
                 for (var event in this.boundFunctions) {
                     var boundFunction = this.boundFunctions[event];
-                    if (typeof user.socket === "object" && typeof user.socket.off !== "undefined") {
-                        user.socket.off(event, boundFunction);   
-                    }			
+                    if (typeof user.socket === "object" && typeof user.socket.removeListener !== "undefined") {
+                        user.socket.removeListener(event, boundFunction);   
+                    }
                 }
             }
         },
@@ -92,9 +92,9 @@ var Group = Group || (function() {
          */
         off: function(event) {
             var boundFunction = this.boundFunctions[event]
-            
+
             this.users.forEach(function(user){
-                user.socket.off(event, boundFunction);
+                user.socket.removeListener(event, boundFunction);
             }, this)
         },
 

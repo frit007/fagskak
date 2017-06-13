@@ -13,9 +13,9 @@
     <div class="col-sm-5">
         <ul class="nav nav-tabs">
             <li class="active"><a data-toggle="tab" href="#general_menu">General</a></li>
-            <li class ="hidden"><a data-toggle="tab" href="#spectator_settings">Spectator settings</a></li>
-            <li class ="hidden"><a data-toggle="tab" href="#team_settings">Team settings</a></li>
-            <li class ="hidden"><a data-toggle="tab" href="#game_settings">Game settings</a></li>
+            <li  ><a class ="hidden" id="spectator_menu" data-toggle="tab" href="#spectator_settings">Spectator settings</a></li>
+            <li  ><a class ="hidden" id="team_menu" data-toggle="tab" href="#team_settings">Team settings</a></li>
+            <li  ><a class ="hidden" id="game_menu" data-toggle="tab" href="#game_settings">Game settings</a></li>
             {{!--<li><a data-toggle="tab" href="#menu3">Menu 3</a></li>--}}
         </ul>
 
@@ -36,7 +36,20 @@
             
             
             <div id="team_settings" class="tab-pane fade">
-                <h3>Spectator settings</h3>
+                <h3>Team settings</h3>
+                <div class="form-horizontal">
+                    <label class="control-label col-sm-4" for="team_name">Team name:</label>
+                    <div class="col-sm-8"> 
+                        <input type="text" class="form-control" id="team_name" placeholder="Enter password">
+                    </div>
+                    <label class="control-label col-sm-4" for="team_color">Team color:</label>
+                    <div class="col-sm-8"> 
+                        <input type="color" class="form-control" id="team_color" placeholder="Enter password">
+                    </div>
+                </div>
+
+                <button id="team_update" class="btn btn-primary">UPDATE</button>
+                
             </div>
 
             <div id="game_settings" class="tab-pane fade">

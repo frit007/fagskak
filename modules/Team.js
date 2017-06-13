@@ -22,7 +22,7 @@ function Team (options) {
 
 			onDisband: function() {},
 
-            color: "#FFF",
+            color: "#FFFFFF",
 
 			// has to overwritten
 			id: "",
@@ -58,6 +58,9 @@ Object.assign(Team.prototype,{
 		}
 	},
 
+    emitOptions: function() {
+        
+    },
 
     getUsersInfo: function() {
         var info = [];
@@ -84,6 +87,8 @@ Object.assign(Team.prototype,{
         // add the user to this team
 		user.addToGroup(this);
 
+        user.emit("teamOptions", this.getInfo());
+
 		this.options.onUpdate(this.getInfo());
 		
 		return true;
@@ -91,11 +96,13 @@ Object.assign(Team.prototype,{
 
 	leave: function(user) {
 		if (this.containsUser(user)) {
+
 			this.removeUser(user);
             
 			if (this.users.length >= 1) {
 				this.options.onUpdate(this.getInfo());
 			} else {
+                this.disband();
 				this.options.onDisband();
 			}
 		}
@@ -103,10 +110,17 @@ Object.assign(Team.prototype,{
 });
 
 
-function setupLobbySockets(teamGroup) {
+function setupLobbySockets(team) {
+    
+    team.on('teamUpdate', function(changes) {
+        team.options.color = changes.color;
+        team.options.name = changes.name;
+        team.options.onUpdate(team.getInfo());
+        team.emit("teamOptions", team.getInfo());
+    })
 
-    teamGroup.on('update', function(changes) {
-
+    team.on('getTeamOptions', function() {
+        this.emit("teamOptions", team.getInfo());
     })
 }
 
