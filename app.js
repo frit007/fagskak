@@ -6,9 +6,34 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var expressValidator = require('express-validator');
 var expressSession = require('express-session');
+require('dotenv').load();
 
+console.log(process.env);
 
-var config = require("./config.json");
+// try{
+// 	var config = require("./config.json");
+// } catch(e){
+var config = {
+	// process.env
+	db: {
+		host: process.env.DB_HOST,
+		user: process.env.DB_USER,
+		password: process.env.DB_PASSWORD,
+		database: process.env.DB_DATABASE
+	},
+	port: process.env.HTTP_PORT,
+	socketPort: process.env.SOCKET_PORT,
+	googleOauth: {
+		clientId: process.env.GOOGLEOAUTH_CLIENT_ID,
+		clientSecret: process.env.GOOGLEOAUTH_CLIENT_SECRET
+	},
+	serverName: process.env.SERVERNAME,
+	session: {
+		secret: process.env.SESSION_SECRET
+	}
+
+}
+// }
 var mysql = require('mysql');
 
 var connection = mysql.createConnection(config.db);
@@ -30,7 +55,7 @@ sessionMiddleware = expressSession({
 });
 
 var app = express();
-var server = app.listen(3100);
+var server = app.listen(config.socketPort);
 var socket = require('socket.io')(server);
 
 socket.use(function(socket, next) {

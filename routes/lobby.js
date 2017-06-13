@@ -11,7 +11,7 @@ module.exports = function(users, socket, sessionMiddleware, lobbies) {
 
 	router.get('/', function(req, res, next) {
 		// var socketAuthToken = req.user.generateSocketAuth();
-		res.render('lobby/index', { title: 'Lobbies'});
+		res.render('lobby/index', { title: 'Lobbies', socketPort: process.env.SOCKET_PORT});
 	});
 
 

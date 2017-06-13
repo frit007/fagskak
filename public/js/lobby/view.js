@@ -10,7 +10,6 @@ var info = new BootstrapAlert("info", {
     }
 });
 
-var socket = io("localhost:3100/lobby");
 socket.on('connection', function() {
     console.log("On connection!!");
     socket.emit("getTeams", {})
