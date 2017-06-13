@@ -83,7 +83,6 @@ var lobbyRoutes = require('./routes/lobby')(users, socket, sessionMiddleware, lo
 var lobbiesRoutes = require('./routes/lobbies')(users, socket, sessionMiddleware, lobbies);
 var authRoutes = require('./routes/auth')(users);
 var questionRoutes = require('./routes/questions')(users);
-var lobbies = require('./modules/lobbies')
 var fagskakRoutes = require('./routes/fagskak')(users);
 
 
