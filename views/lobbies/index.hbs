@@ -1,0 +1,230 @@
+
+<div class="container">
+    <div class="row-fluid">
+        <div class="col-xs-6">
+            <h3>Lobbies</h3>
+        </div>
+        <div class="col-xs-6">
+            <h3 class="pull-right">
+                <button class="btn btn-primary" data-toggle="modal" data-target="#createLobbyModal" type="button"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></button>
+                
+
+            </h3>
+        </div>
+    </div>
+</div>
+
+<!-- Create Lobby Modal -->
+<div id="createLobbyModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Create Lobby</h4>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+            <label for="name">Lobby name:</label>
+            <input type="text" class="form-control" id="name">
+        </div>
+        <div class="form-group">
+            <label for="name">Lobby password(optional)</label>
+            <input type="password" class="form-control" id="password">
+        </div>
+      </div>
+      <div class="modal-footer">
+            <button type="button" class="btn btn-success" data-dismiss="modal" id="createButton">Create</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="info"></div>
+
+<div class="box-content nopadding">
+    <table id="lobby_table" class="table table-bordered table-striped">
+
+        <thead>
+            <tr>
+                <th class="largeLetters">Name</th>
+                <th class="largeLetters">Owner</th>
+                <th class="largeLetters" style="width:120px;">Player count</th>
+                <th class="largeLetters" style="width:80px;">Join</th>
+            </tr>
+        </thead>
+        <tbody id="lobby_body">
+            <tr class="lobby-template" style="display:none">
+                <td class="lbl-name largeLetters">-</td>
+                <td class="lbl-owner largeLetters">-</td>
+                <td class="lbl-player_count largeLetters">-</td>
+                <td><button class="lbl-join btn">Join</button></td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
+
+
+<!-- Password Modal -->
+<div id="passwordModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+    <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Password for lobby</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="name">Password</label>
+                    <input type="password" class="form-control" id="lobby_password">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-dismiss="modal" id="joinButton">Join</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="js/socket.io.js" type="text/javascript"></script>
+<script src="js/stable_table.js" type="text/javascript"></script>
+<script src="/js/BootstrapAlert.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+    // create a new Bootstrap alert, which can be used to display any error messages
+    var info = new BootstrapAlert("info", {
+        modifiers: {
+            danger: {
+                hide: 15000
+            },
+            success: {
+                hide: 5000
+            }
+        }
+    });
+
+
+	 var socket = io("localhost:3100/lobbies");
+    //var socket = io("localhost:3100");
+
+    /*socket.emit("authenticate", socketAuthToken, function(msg) {
+        //console.log("response", msg);
+        if(msg) {
+            
+        } else {
+            info.error("Unable to connect to session");
+        }
+    })*/
+
+    $("#createButton").on("click", function() {
+        /*socket.emit("create_lobby", {
+            name: $("#name").val(),
+            password: $("#password").val(),
+        }, function(msg) {
+            
+        })*/
+        $.ajax({
+            type:"POST",
+            url: "/lobbies/create",
+            data: {
+                name: $("#name").val(),
+                password: $("#password").val()
+            },
+            success: function(msg) {
+                window.location = "/lobby"
+            },
+            error: function(error) {
+                info.error("Error while creating lobby")
+            }
+        })
+    })
+
+
+	socket.on('log', function(data) {
+		console.log("log", data)
+	})
+
+
+/*    socket.on('addedLobby', function(lobby) {
+        console.log("addedLobby", lobby);
+    })
+
+    socket.on('updatedLobby', function(lobby) {
+        console.log("addedLobby", lobby);
+    })*/
+
+
+    socket.on('lobbies', function(lobbies) {
+        console.log("Lobbies", lobbies);
+        lobbyTable.update(lobbies);
+    })
+
+    socket.emit("getLobbies", {});
+
+	var lobbyTable = new StableTable({
+		
+		commonForRow: ["id"],
+        // prefix for the template
+        templatePrefix: "lbl-",
+        // The id of the table, where it should be stored
+        tableBody: "lobby_body",
+        
+        // class of the template
+        templateSelector: "lobby-template",
+
+        columns: {
+        	name: function(data) {
+        		console.log("CALL");
+        		return data.name;
+        	},
+        	owner: function(data) {
+        		return data.owner;
+        	},
+        	player_count: function(data) {
+        		return data.playerCount;
+        	},
+        	join: function(data, row, template) {
+                function joinLobby(password) {
+                    socket.emit("join", {id: data.id, password: password}, function(response) {
+                        if(response.success){
+                            window.location = "/lobby";
+                        } else {
+                            info.danger(response.error);
+                        }
+                    })
+                }
+
+                if(data.usesPassword) {
+                    $(template).html('<i class="fa fa-lock fa-2x" aria-hidden="true"></i>')
+                    $(template).on("click", function() {
+                        $("#passwordModal").modal("show");
+
+                        // remove all existing bindings
+                        $("#joinButton").off('click');
+                        // clear password field
+                        $("#lobby_password").val("");
+                        
+                        $("#joinButton").on('click', function() {
+                            joinLobby($("#lobby_password").val());
+                        })
+                    })
+                } else {
+                    $(template).on("click", function() {
+                        joinLobby("");
+                    })
+
+                }
+        	}
+
+        },
+        
+	})
+</script>

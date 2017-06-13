@@ -1,0 +1,17 @@
+<script src="js/socket.io.js" type="text/javascript"></script>
+<script src="js/stable_table.js" type="text/javascript"></script>
+
+<h3>Game</h3>
+
+
+
+
+<script type="text/javascript">
+	var socket = io("localhost:3100");
+
+	socket.on('log', function(data) {
+		console.log("log", data)
+	})
+
+
+</script>

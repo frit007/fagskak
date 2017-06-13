@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>webgl test</title>
+		<link rel='stylesheet' href='/stylesheets/style.css' />
+		<link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap.css">
+
+		<style type="text/css">
+			body {
+				margin:0;
+				overflow: hidden;
+			}
+
+		</style>
+</head>
+<body>
+<div id="fizzytext"></div>
+<div   id="webgl_container"></div>
+</body>	
+<script src="/js/datgui/dat.gui.js" type="text/javascript" ></script>
+<script src="/js/jquery-3.2.0.js" type="text/javascript"></script>
+<script src="/js/bootstrap/bootstrap.min.js" type="text/javascript"></script>
+<script src="/js/three.js" type="text/javascript"></script>
+ <!--<script src="http://threejs.org/build/three.min.js"></script> -->
+<script src="/js/OrbitControls/OrbitControls.js"></script>
+<!-- <script src="/js/webgl_test.js" type="text/javascript"></script> -->
+<script src="/js/three/CSS3DRenderer.js" type="text/javascript"></script>
+<script src="/js/underscore.js"></script>
+
+<script src="/js/fagskak/Brick.js" type="text/javascript"></script>
+<script src="/js/fagskak/webgl/GLBrick.js" type="text/javascript"></script>
+<script src="/js/fagskak/Figure.js" type="text/javascript"></script>
+<script src="/js/fagskak/Board.js" type="text/javascript"></script>
+<script src="/js/fagskak/webgl/GLBoard.js" type="text/javascript"></script>
+<script src="/js/fun/FizzyText.js" type="text/javascript"></script>
+<script src="/js/fun/improvedNoise.js" type="text/javascript"></script>
+<script src="/js/tween/Tween.js"type="text/javascript"></script>
+
+<!--<script src="/js/three/examples/js/renderers/CanvasRenderer.js"></script>
+<script src="/js/three/examples/js/renderers/Projector.js"></script>-->
+
+<script type="text/javascript">
+	var gui = new dat.GUI();
+	// var text = new FizzyText("Hello",{width:1000});
+	// gui.add(text, 'message');
+	// gui.add(text, 'speed', -5, 5);
+	// gui.add(text, 'displayOutline');
+	// gui.add(text, 'explode');
+	// gui.add(text, 'colors');
+
+	function vectorLength(x,y,z) {
+		return new THREE.Vector3(x,y,z).length();
+	} 
+
+
+
+	var container = document.getElementById("webgl_container");
+	
+	var glboard = new GLBoard({
+		container: container
+	});
+	// var board = new Board({});
+</script>
+</html>

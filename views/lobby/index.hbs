@@ -1,0 +1,54 @@
+
+<div id="info"></div>
+
+<div class="col-sm-12">
+
+    <div class="col-sm-7" >
+        <div id="users"></div>
+        <div id="locked"></div>
+        <button class="col-sm-12 btn btn-success" id="new_team">New Team</button>
+    </div>
+
+
+    <div class="col-sm-5">
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#general_menu">General</a></li>
+            <li class ="hidden"><a data-toggle="tab" href="#spectator_settings">Spectator settings</a></li>
+            <li class ="hidden"><a data-toggle="tab" href="#team_settings">Team settings</a></li>
+            <li class ="hidden"><a data-toggle="tab" href="#game_settings">Game settings</a></li>
+            {{!--<li><a data-toggle="tab" href="#menu3">Menu 3</a></li>--}}
+        </ul>
+
+          <div class="tab-content">
+            <div id="general_menu" class="tab-pane fade in active">
+                <h3>General</h3>
+
+
+                <a href="/lobby/leave"><button class="btn form-control">Leave Lobby</button></a>
+            </div>
+
+
+
+            <div id="spectator_settings" class="tab-pane fade">
+                <h3>Spectator settings</h3>
+            </div>
+            
+            
+            
+            <div id="team_settings" class="tab-pane fade">
+                <h3>Spectator settings</h3>
+            </div>
+
+            <div id="game_settings" class="tab-pane fade">
+                <h3>Game settings</h3>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+<script src="/js/datatables.min.js"></script>
+<script src="/js/socket.io.js" type="text/javascript"></script>
+<script src="/js/BootstrapAlert.js" type="text/javascript"></script>
+<script src="/js/TeamTable.js"></script>
+<script src="/js/lobby/view.js"></script>
