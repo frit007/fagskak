@@ -17,7 +17,7 @@ module.exports = function(users, socket, sessionMiddleware, lobbies) {
 		}
 
 		// var socketAuthToken = req.user.generateSocketAuth();
-		res.render('lobbies/index', { title: 'Lobbies'});
+		res.render('lobbies/index', { title: 'Lobbies', socketPort: process.env.SOCKET_PORT});
 	});
 
 

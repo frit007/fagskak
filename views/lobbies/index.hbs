@@ -112,7 +112,7 @@
     });
 
 
-	 var socket = io("localhost:3100/lobbies");
+	 var socket = io("localhost:{{socketPort}}/lobbies");
     //var socket = io("localhost:3100");
 
     /*socket.emit("authenticate", socketAuthToken, function(msg) {

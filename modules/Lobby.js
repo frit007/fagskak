@@ -48,7 +48,10 @@ function Lobby (owner, options) {
 		onUpdate: (info) => {
 			this.emit("team", info);
 		},
-		color: "#CCC",
+		onDisband: () => {
+			this.emit("team", this.teams["spectators"].getInfo());
+		},
+		color: "#CCCCCC",
 		name: 'Spectators <i class="fa fa-eye" aria-hidden="true"></i>'
 	})
 	this.spectators = this.teams["spectators"];
@@ -98,10 +101,11 @@ Object.assign(Lobby.prototype,{
 		var uniqueId = this.getUniqueId();
 		options.id = uniqueId;
 		options.onUpdate = (info) => {
-			this.emit("team", team)
+			this.emit("team", info)
 		}
 		options.onDisband = () => {
 			this.emit("removeTeam", uniqueId)
+			delete this.teams[uniqueId];
 		}
 		var team = new Team(options)
 		this.teams[uniqueId] = team;
@@ -196,16 +200,19 @@ function setupLobbySockets(lobbyGroup) {
 		team.join(this);
 	})
 
-    lobbyGroup.on('join', function(joinRequest, ack) {
-        var lobby = lobbyGroup.getTeamById(joinRequest.id);
+    lobbyGroup.on('joinTeam', function(joinRequest, ack) {
+        var team = lobbyGroup.getTeamById(joinRequest.id);
 
-        if (typeof lobby === 'undefined') {
-            ack({error: "Lobby does not exist", success: false});
+        if (typeof team === 'undefined') {
+            ack({error: "team does not exist", success: false});
             return;
         }
 
-		lobby.join(user);
-        // "this" is the user sending the message
+		// "this" is the user who sent the request 
+		if (!team.containsUser(this)) {
+			team.join(this);
+		}
+
 		ack({success: true});
     })
 
