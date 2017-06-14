@@ -6,7 +6,15 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var expressValidator = require('express-validator');
 var expressSession = require('express-session');
-require('dotenv').load();
+
+if(process.env) {
+
+}
+var status = require('dotenv').config()
+
+if(status.error) {
+	throw status.error
+}
 
 console.log(process.env);
 
@@ -73,7 +81,11 @@ socket.sockets.on('connection', function(client) {
 		console.log("log (user: "+client.user.display_name+")", log)
 	})
 });
-
+function goOn () {
+	return "11";
+}
+socket.sockets.on('gamer', goOn);
+socket.sockets.removeListener('gamer', goOn);
 
 /*---------------- SETUP ROUTES ----------------*/
 
