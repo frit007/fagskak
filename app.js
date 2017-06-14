@@ -21,8 +21,8 @@ var config = {
 		password: process.env.DB_PASSWORD,
 		database: process.env.DB_DATABASE
 	},
-	port: process.env.HTTP_PORT,
-	socketPort: process.env.SOCKET_PORT,
+	port: process.env.HTTP_PORT | 3000,
+	socketPort: process.env.SOCKET_PORT | 3100,
 	googleOauth: {
 		clientId: process.env.GOOGLEOAUTH_CLIENT_ID,
 		clientSecret: process.env.GOOGLEOAUTH_CLIENT_SECRET
