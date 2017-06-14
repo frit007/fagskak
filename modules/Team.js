@@ -1,5 +1,7 @@
 var Group = require("./Group");
 
+const Entities = require('html-entities').AllHtmlEntities;
+const entities = new Entities();
 
 /**
  * Lobby constructor
@@ -113,8 +115,12 @@ Object.assign(Team.prototype,{
 function setupLobbySockets(team) {
     
     team.on('teamUpdate', function(changes) {
-        team.options.color = changes.color;
-        team.options.name = changes.name;
+        if(changes.color) {
+            team.options.color = changes.color;
+        }
+        if(changes.name) {
+            team.options.name = entities.encode(changes.name);
+        }
         team.options.onUpdate(team.getInfo());
         team.emit("teamOptions", team.getInfo());
     })

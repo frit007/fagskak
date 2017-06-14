@@ -216,6 +216,10 @@ function setupLobbySockets(lobbyGroup) {
 		ack({success: true});
     })
 
+	lobbyGroup.on('isLobbyOwner', function(message) {
+		
+	})
+
 }
 
 

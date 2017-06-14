@@ -3,6 +3,9 @@ var Group = Group || (function() {
         // create a new array so it is not shared among instances
         this.users = [];
 	    this.boundFunctions = {};
+        // since we use bind to pass in the user, each function is unique which means we have to store the funcion for every user.
+        // stored like [event][user.id]
+        this.userBoundFunctions ={};
     }
 
     Group.prototype = {
@@ -23,10 +26,44 @@ var Group = Group || (function() {
 
             if (user.socket !== null) {
                 for	(var key in this.boundFunctions) {
-                    var boundFunction = this.boundFunctions[key];
-                    user.socket.on(key, boundFunction.bind(user));
+                    // var boundFunction = this.boundFunctions[key];
+                    // user.socket.on(key, boundFunction.bind(user));
+                    this.bindEventToUser(key,user);
                 }
             }
+        },
+
+        bindEventToUser: function(event, user) {
+            var boundFunction = this.boundFunctions[event];
+            if(typeof boundFunction === "undefined") {
+                throw "The function you are trying to bind is not defined yet."
+            }
+            if(user && user.socket) {
+                // if the event group does not exist already then create it
+                if(typeof this.userBoundFunctions[event] === "undefined") {
+                    this.userBoundFunctions[event] = {};
+                }
+                
+                var userBoundFunction = boundFunction.bind(user);
+                
+                this.userBoundFunctions[event][user.id] = userBoundFunction;
+
+                user.socket.on(event,userBoundFunction);
+            }
+        },
+
+        unbindEventFromUser: function(event, user) {
+            if(!(this.userBoundFunctions[event] && this.userBoundFunctions[event][user.id])) {
+                // don't do anything if the function does not exist for the user
+                return;
+            }
+
+            if(user && user.socket) {
+                user.socket.removeListener(event, this.userBoundFunctions[event][user.id]);
+            }
+            // delete the function regardless if the user is there or not, because if the user is not connected it is no longer relevant anyway 
+            delete this.userBoundFunctions[event][user.id]
+            
         },
 
         /**
@@ -46,13 +83,38 @@ var Group = Group || (function() {
             if (keepBindings !== true && typeof user.socket === "object") {
                 // if removeBindings is true remove all socket bindings
                 for (var event in this.boundFunctions) {
-                    var boundFunction = this.boundFunctions[event];
-                    if (typeof user.socket === "object" && typeof user.socket.removeListener !== "undefined") {
-                        user.socket.removeListener(event, boundFunction);   
-                    }
+                    // var boundFunction = this.boundFunctions[event];
+                    // if (typeof user.socket === "object" && typeof user.socket.removeListener !== "undefined") {
+                    //     user.socket.removeListener(event, boundFunction);
+                    //     // this.manuallyRemoveEvent(user, event, boundFunction)   
+                    // }
+                    this.unbindEventFromUser(event, user);
                 }
             }
         },
+
+        // /**
+        //  * Since the event listener does not actually remove events i implemented it myself
+        //  * 
+        //  * @param {User} user 
+        //  * @param {String} event 
+        //  * @param {Function} boundFunction 
+        //  */
+        // manuallyRemoveEvent: function(user, event, boundFunction) {
+        //     if(user && typeof user.socket == "object") {
+        //         var events = user.socket._events;
+        //         var boundEvent = events[event];
+        //         if(boundEvent === boundFunction){
+        //             delete events[boundEvent];
+        //         } else if(typeof boundEvent === "object" && boundEvent.constructor === Array && boundEvent.indexOf(boundFunction) != -1){
+        //             var index = boundEvent.indexOf(boundFunction);
+        //             boundEvent.splice(index, 1);
+        //             if(boundEvent.length === 1) {
+        //                 events[event] = boundEvent[0];
+        //             }
+        //         }
+        //     }
+        // },
 
 
         /**
@@ -79,9 +141,10 @@ var Group = Group || (function() {
             // bind the event on every user socket
             for (var key in this.users ) {
                 var user = this.users[key];
-                if (user.socket) {
-                    user.socket.on(event, response.bind(user));
-                }
+                // if (user.socket) {
+                //     user.socket.on(event, response.bind(user));
+                // }
+                this.bindEventToUser(event, user);
             }
         },
 
@@ -94,7 +157,9 @@ var Group = Group || (function() {
             var boundFunction = this.boundFunctions[event]
 
             this.users.forEach(function(user){
-                user.socket.removeListener(event, boundFunction);
+                // user.socket.removeListener(event, boundFunction);
+                // this.manuallyRemoveEvent(user, event, boundFunction);
+                user.unbindEventFromUser(event,user);
             }, this)
         },
 

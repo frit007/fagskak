@@ -81,15 +81,25 @@ socket.on("teamOptions", function(teamOptions){
         $("#team_menu").removeClass("hidden").click();
 
 
-        $("#team_name").val(teamOptions.name);
-        $("#team_color").val(teamOptions.color);
-
-        $("#team_update").off('click').on('click', function() {
+        $("#team_name").val(teamOptions.name).off("change").on("change", function(){
             socket.emit("teamUpdate", {
-                name: $("#team_name").val(),
-                color: $("#team_color").val(),
+                name: $("#team_name").val()
+            }
+            )
+        });
+        $("#team_color").val(teamOptions.color).off("change").on("change", function() {
+            socket.emit("teamUpdate", {
+                color: $("#team_color").val()
             })
-        })
+        });
+
+
+        // $("#team_update").off('click').on('click', function() {
+        //     socket.emit("teamUpdate", {
+        //         name: $("#team_name").val(),
+        //         color: $("#team_color").val(),
+        //     })
+        // })
 
     } else {
         $("#spectator_menu").removeClass("hidden").click();
