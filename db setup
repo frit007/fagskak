@@ -1,6 +1,6 @@
 # drop the user if already exists to avoid any conflicts
 drop user if exists 'fagskak'@'localhost';
 
-create user 'fagskak'@'localhost' identified by 'xQchUDs-=YZ%GseA3%9fPUyCbta9NbwwW8zA478EPKbUmrFt=ueA5NdS5@aBf8SBVxPkM-rBx543w$8U9EYw5V&TwBZ@kD-f+z*UuuPhy6BJ!99!?wZWm6%XV%N$Xp?7zq4GkP3m6Y=3_mq?QQcSwerAR7VvPmDYtb*$S&2JvP^g?RK2p^JTg4YpLX^6A@A_&SfjE^FSUQ^JwqG2qTMNCSvMgW^9Ny^LrX&@vRdtk^-xJ3kwFjUp8#BK@Hw!ALem';
+create user 'fagskak'@'localhost' identified by {PASSWORD};
 grant DELETE, INSERT, SELECT, UPDATE on fagskak.* to 'fagskak'@'localhost';
 FLUSH PRIVILEGES;
