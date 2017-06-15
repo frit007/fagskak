@@ -26,7 +26,7 @@
 <!-- <script src="/js/webgl_test.js" type="text/javascript"></script> -->
 <script src="/js/three/CSS3DRenderer.js" type="text/javascript"></script>
 <script src="/js/underscore.js"></script>
-
+<script src="/js/fagskak/webgl/GLPath.js"></script>
 <script src="/js/fagskak/Brick.js" type="text/javascript"></script>
 <script src="/js/fagskak/webgl/GLBrick.js" type="text/javascript"></script>
 <script src="/js/fagskak/Figure.js" type="text/javascript"></script>
@@ -35,6 +35,7 @@
 <script src="/js/fun/FizzyText.js" type="text/javascript"></script>
 <script src="/js/fun/improvedNoise.js" type="text/javascript"></script>
 <script src="/js/tween/Tween.js"type="text/javascript"></script>
+<script src="/js/fagskak/webgl/GLBoardSelector.js"></script>
 
 <!--<script src="/js/three/examples/js/renderers/CanvasRenderer.js"></script>
 <script src="/js/three/examples/js/renderers/Projector.js"></script>-->
@@ -67,17 +68,23 @@
 	
 	// glboard.glScene.add( sphere );
 	// var board = new Board({});
-var particleCount = 2000;
-    var particles = new THREE.Geometry();
 
+function createParticles(){
+
+	var particleCount = 4000;
+
+    var particles = new THREE.Geometry();
 	// Create the vertices and add them to the particles geometry
 	for (var p = 0; p < particleCount; p++) {
 	
 		// This will create all the vertices in a range of -200 to 200 in all directions
-		var x = Math.random() * 400 - 200;
-		var y = Math.random() * 400 - 200;
-		var z = Math.random() * 400 - 200;
-		      
+		// var x = Math.random() * 400 - 200;
+		// var y = Math.random() * 400 - 200;
+		// var z = Math.random() * 400 - 200;
+		var x = 5;
+		var y = p - 200;
+		var z = 5;
+		
 		// Create the vertex
 		var particle = new THREE.Vector3(x, y, z);
 		
@@ -86,18 +93,63 @@ var particleCount = 2000;
 	}
 
 	// Create the material that will be used to render each vertex of the geometry
-	var particleMaterial = new THREE.PointsMaterial(
-			{color: 0xffffff, 
-			 size: 4,
-			 map: THREE.ImageUtils.loadTexture("images/spark.png"),
-			 blending: THREE.AdditiveBlending,
-			 transparent: true,
-			});
-	 
+	var particleMaterial = new THREE.PointsMaterial({
+		color: 0xf44141, 
+		size: 4,
+		map: THREE.ImageUtils.loadTexture("images/spark.png"),
+		// blending: THREE.AdditiveBlending,
+		// blending: THREE.NoBlending,
+		transparent: true,
+	});
+	// particleMaterial.depthWrite = true;
+	//  particleMaterial.alphaTest=0.3
 	// Create the particle system
 	particleSystem = new THREE.Points(particles, particleMaterial);
+	particleSystem.renderOrder = 1;
+	// particles.renderOrder = 0.5;
+	// particleSystem.sortParticles = true;
+	// particleSystem.frustumCulled = true;
+	particles.verticesNeedUpdate = true;
+	particles.normalsNeedUpdate = true;
 
 	glboard.glScene.add(particleSystem)
 
+	function move(x,z,flag) {
+		for (var p = 0; p < particleCount; p++) {
+			particles.vertices[p].x=x;
+			particles.vertices[p].z=z;
+
+			if(!flag) {
+				particles.verticesNeedUpdate = true;
+				particles.normalsNeedUpdate = true;
+			}
+			// This will create all the vertices in a range of -200 to 200 in all directions
+			// var x = Math.random() * 400 - 200;
+			// var y = Math.random() * 400 - 200;
+			// var z = Math.random() * 400 - 200;
+			// var x = 5;
+			// var y = p - 200;
+			// var z = 5;
+			
+			// // Create the vertex
+			// var particle = new THREE.Vector3(x, y, z);
+			
+			// // Add the vertex to the geometry
+			// particles.vertices.push(particle);
+		}
+	}
+	window.move = move;
+	window.x = {
+		particles:particles,
+		particleSystem:particleSystem,
+		particleMaterial:particleMaterial
+	}
+}
+// createParticles();
+	// path = new GLPath(glboard.glScene,glboard);
+// path.update(glboard.bricks[4])
+selector = new GLBoardSelector(glboard);
+selector.active = true;
+// selector.path.update(glboard.bricks[4]);
 </script>
 </html>

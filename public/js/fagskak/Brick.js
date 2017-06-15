@@ -65,6 +65,7 @@ var Brick = Brick || (function() {
 				this.board.brickObjects.push(mesh);
 				this.scene.add(mesh);
 				this.meshes.push(mesh);
+				mesh.brick = this;
 				
 				// this.mesh.position.set(x*this.board.boardDim.brickDim.x,1*this.board.boardDim.brickDim.y,z*this.board.boardDim.brickDim.z);
 

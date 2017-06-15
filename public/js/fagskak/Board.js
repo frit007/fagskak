@@ -58,7 +58,7 @@ var Board = Board || function(){
         getBrick: function(x,z) {
 
 
-            console.log("this bricks", this.bricks);
+            // console.log("this bricks", this.bricks);
 			var bricksX = this.bricks[x];
 			if (bricksX !== undefined) {
 				var brick = bricksX[z];

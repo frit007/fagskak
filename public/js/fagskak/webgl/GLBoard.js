@@ -40,7 +40,9 @@ var GLBoard = GLBoard || function(exports){
 				this.windowRef.innerWidth = this.windowRef.offsetWidth;
 			}
 			
-			this.camera = new THREE.PerspectiveCamera(60, this.windowRef.innerWidth/this.windowRef.innerHeight, .1, 500);
+			// this.camera = new THREE.PerspectiveCamera(60, this.windowRef.innerWidth/this.windowRef.innerHeight, .1, 500);
+			var bounds = this.container.getBoundingClientRect();
+			this.camera = new THREE.PerspectiveCamera(60,bounds.width/bounds.height , .1, 500);
 			this.glRenderer = this.createGlRenderer();
 			this.cssScene = new THREE.Scene();
 			this.mouse = new THREE.Vector2();
@@ -109,49 +111,78 @@ var GLBoard = GLBoard || function(exports){
 			controls.target = new THREE.Vector3( 25.5, 0, 25.5 );
 			controls.update();
 
-			this.container.addEventListener("mousedown",this.onMouseDown.bind(this),false);
-			this.container.addEventListener('touchstart',this.onTouchStart.bind(this),false )
+			// this.container.addEventListener("mousedown",this.onMouseDown.bind(this),false);
+			// this.container.addEventListener('touchstart',this.onTouchStart.bind(this),false )
 			
 			this.controls = controls;
 			this.camera = camera;
 		},
-		onMouseDown: function(event) {
-			if (event.button === THREE.MOUSE.LEFT) {
-				event.preventDefault();
-				var domElement = this.glRenderer.domElement;
-				var boundingBox;
-				
-				boundingBox = domElement.getBoundingClientRect();
-				this.mouse.x = (event.clientX/ boundingBox.width)*2  - 1 - (boundingBox.left / boundingBox.width)*2;
-				this.mouse.y = -(event.clientY / boundingBox.height)*2 + 1 + (boundingBox.top / boundingBox.height)  * 2;
-
-
-				console.log("mouse", this.mouse);
-				// this.mouse.y = event.clientY;
-
-				this.raycaster.setFromCamera(this.mouse, this.camera);
-
-				var intersects = this.raycaster.intersectObjects(this.brickObjects);
-				console.log(intersects);
-				var color = Math.random() * 0xffffff;
-
-				if (intersects.length > 0) {
-					intersects[0].object.material.color.setHex(color);
-					this.temp = intersects[0].object.material.color.getHexString();
-					this.name = intersects[0].object.name;
-
-					// console.log("!!!");
-				}
-			}
-		},
-
-		onTouchStart: function(event) {
+		
+		getClickedBrick(event) {
 			event.preventDefault();
+			var domElement = this.glRenderer.domElement;
+			var boundingBox;
+			
+			boundingBox = domElement.getBoundingClientRect();
+			this.mouse.x = (event.clientX/ boundingBox.width)*2  - 1 - (boundingBox.left / boundingBox.width)*2;
+			this.mouse.y = -(event.clientY / boundingBox.height)*2 + 1 + (boundingBox.top / boundingBox.height)  * 2;
 
-			event.clientX = event.touches[0].clientX;
-			event.clientY = event.touches[0].clientY;
-			onMouseDown(event);
+
+			console.log("mouse", this.mouse);
+			// this.mouse.y = event.clientY;
+
+			this.raycaster.setFromCamera(this.mouse, this.camera);
+
+			var intersects = this.raycaster.intersectObjects(this.brickObjects);
+			// console.log(intersects);
+			// var color = Math.random() * 0xffffff;
+			if (intersects.length > 0) {
+				return intersects[0].object.brick;
+			} else {
+				return null;
+			}
+			// var intersect = intersects[0];
+			// console.log("brick", intersect);
+			// return intersect ? intersect : null;
 		},
+
+		// onMouseDown: function(event) {
+		// 	if (event.button === THREE.MOUSE.LEFT) {
+		// 		event.preventDefault();
+		// 		var domElement = this.glRenderer.domElement;
+		// 		var boundingBox;
+				
+		// 		boundingBox = domElement.getBoundingClientRect();
+		// 		this.mouse.x = (event.clientX/ boundingBox.width)*2  - 1 - (boundingBox.left / boundingBox.width)*2;
+		// 		this.mouse.y = -(event.clientY / boundingBox.height)*2 + 1 + (boundingBox.top / boundingBox.height)  * 2;
+
+
+		// 		console.log("mouse", this.mouse);
+		// 		// this.mouse.y = event.clientY;
+
+		// 		this.raycaster.setFromCamera(this.mouse, this.camera);
+
+		// 		var intersects = this.raycaster.intersectObjects(this.brickObjects);
+		// 		console.log(intersects);
+		// 		var color = Math.random() * 0xffffff;
+
+		// 		if (intersects.length > 0) {
+		// 			intersects[0].object.material.color.setHex(color);
+		// 			this.temp = intersects[0].object.material.color.getHexString();
+		// 			this.name = intersects[0].object.name;
+
+		// 			// console.log("!!!");
+		// 		}
+		// 	}
+		// },
+
+		// onTouchStart: function(event) {
+		// 	event.preventDefault();
+
+		// 	event.clientX = event.touches[0].clientX;
+		// 	event.clientY = event.touches[0].clientY;
+		// 	onMouseDown(event);
+		// },
 		// runCustomAnimation: function(nowTime) {
 		// 	var delta = nowTime - this.lastTime;
 		// 	// take a copy waitForNextFrame, so we can clear it before 
@@ -178,11 +209,11 @@ var GLBoard = GLBoard || function(exports){
 			TWEEN.update(time);
 			
 			this.glRenderer.render(this.glScene, this.camera);
-			this.cssRenderer.render(this.cssScene, this.camera);
+			// this.cssRenderer.render(this.cssScene, this.camera);
 		},
 		loadCornerLabels: function(scene) {
 			var loader = new THREE.FontLoader();
-			loader.load( 'js/three/examples/fonts/helvetiker_bold.typeface.json', function ( font ) {
+			loader.load( 'js/three/fonts/helvetiker_bold.typeface.json', function ( font ) {
 
 				textGeometryProperties = {
 					font: font,
