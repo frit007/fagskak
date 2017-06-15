@@ -37,12 +37,14 @@ CREATE TABLE `game_groups` (
 	PRIMARY KEY (`id`)
 );
 
-CREATE TABLE `board_bind` (
+CREATE TABLE `board_bindings` (
 	`id` INT(11) AUTO_INCREMENT NOT NULL,
 	`board_group_id` INT(11) NOT NULL,
 	`game_id` INT(11) NOT NULL,
 	`question_category_id` INT(11) NOT NULL,
 	`weigth` INT(11) NOT NULL,
+	`tag_usage` ENUM('BLACKLIST', 'WHITELIST'),
+	`difficulty` INT(11) NOT NULL,
 	PRIMARY KEY (`id`)
 );
 
@@ -59,6 +61,7 @@ CREATE TABLE `questions` (
 	`created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	`created_by` INT(11) NOT NULL,
 	`has_error` BINARY NOT NULL,
+	`difficulty` INT(11) NOT NULL,
 	PRIMARY KEY (`id`)
 );
 
@@ -140,6 +143,13 @@ CREATE TABLE `question_tags_question` (
 	PRIMARY KEY (`id`)
 );
 
+CREATE TABLE `board_binding_question_tags` (
+	`id` INT(11) NOT NULL AUTO_INCREMENT,
+	`board_binding_id` INT(11) NOT NULL,
+	`question_tag_id` INT(11) NOT NULL,
+	PRIMARY KEY (`id`)
+);
+
 ALTER TABLE `group_users` ADD CONSTRAINT `group_users_fk0` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`);
 
 ALTER TABLE `group_users` ADD CONSTRAINT `group_users_fk1` FOREIGN KEY (`group_id`) REFERENCES `groups`(`id`);
@@ -150,11 +160,11 @@ ALTER TABLE `game_groups` ADD CONSTRAINT `game_groups_fk0` FOREIGN KEY (`group_i
 
 ALTER TABLE `game_groups` ADD CONSTRAINT `game_groups_fk1` FOREIGN KEY (`game_id`) REFERENCES `games`(`id`);
 
-ALTER TABLE `board_bind` ADD CONSTRAINT `board_bind_fk0` FOREIGN KEY (`board_group_id`) REFERENCES `board_groups`(`id`);
+ALTER TABLE `board_bindings` ADD CONSTRAINT `board_bindings_fk0` FOREIGN KEY (`board_group_id`) REFERENCES `board_groups`(`id`);
 
-ALTER TABLE `board_bind` ADD CONSTRAINT `board_bind_fk1` FOREIGN KEY (`game_id`) REFERENCES `games`(`id`);
+ALTER TABLE `board_bindings` ADD CONSTRAINT `board_bindings_fk1` FOREIGN KEY (`game_id`) REFERENCES `games`(`id`);
 
-ALTER TABLE `board_bind` ADD CONSTRAINT `board_bind_fk2` FOREIGN KEY (`question_category_id`) REFERENCES `question_categories`(`id`);
+ALTER TABLE `board_bindings` ADD CONSTRAINT `board_bindings_fk2` FOREIGN KEY (`question_category_id`) REFERENCES `question_categories`(`id`);
 
 ALTER TABLE `questions` ADD CONSTRAINT `questions_fk0` FOREIGN KEY (`question_category_id`) REFERENCES `question_categories`(`id`);
 
@@ -184,3 +194,6 @@ ALTER TABLE `question_tags_question` ADD CONSTRAINT `question_tags_question_fk0`
 
 ALTER TABLE `question_tags_question` ADD CONSTRAINT `question_tags_question_fk1` FOREIGN KEY (`question_id`) REFERENCES `questions`(`id`);
 
+ALTER TABLE `board_binding_question_tags` ADD CONSTRAINT `board_binding_question_tags_fk0` FOREIGN KEY (`board_binding_id`) REFERENCES `board_bindings`(`id`);
+
+ALTER TABLE `board_binding_question_tags` ADD CONSTRAINT `board_binding_question_tags_fk1` FOREIGN KEY (`question_tag_id`) REFERENCES `question_tags`(`id`);
