@@ -178,30 +178,30 @@ Object.assign(Lobby.prototype,{
 	}
 });
 
-function setupLobbySockets(lobbyGroup) {
-    console.log(lobbyGroup);
+function setupLobbySockets(lobby) {
+    console.log(lobby);
     // lobbiesGroup.on("connected", function(message) {
     //     console.log("hello");
     // });
 
-    lobbyGroup.on('getTeams', function(message) {
+    lobby.on('getTeams', function(message) {
         // console.log("client", this);
-        this.socket.emit("teams", lobbyGroup.getTeamInfo());
+        this.socket.emit("teams", lobby.getTeamInfo());
     })
 
-    lobbyGroup.on('disconnected', function(message) {
-        // this.removeFromGroup(lobbyGroup);
+    lobby.on('disconnected', function(message) {
+        // this.removeFromGroup(lobby);
     })
 
-	lobbyGroup.on('createTeam', function(options) {
+	lobby.on('createTeam', function(options) {
 		// throw "Not implemented";
-		var team = lobbyGroup.createTeam(options);
+		var team = lobby.createTeam(options);
 		// this is the user
 		team.join(this);
 	})
 
-    lobbyGroup.on('joinTeam', function(joinRequest, ack) {
-        var team = lobbyGroup.getTeamById(joinRequest.id);
+    lobby.on('joinTeam', function(joinRequest, ack) {
+        var team = lobby.getTeamById(joinRequest.id);
 
         if (typeof team === 'undefined') {
             ack({error: "team does not exist", success: false});
@@ -216,8 +216,29 @@ function setupLobbySockets(lobbyGroup) {
 		ack({success: true});
     })
 
-	lobbyGroup.on('isLobbyOwner', function(message) {
-		
+	lobby.on('getLobbySettings', function(message) {
+		if (this.id === lobby.owner.id) {
+			 //  if the user is the owner of the lobby then give him the current settings of the lobby
+			 var info = lobby.getInfo();
+			 info.password = lobby.password;
+			 this.emit("lobbySettings", info);
+		}  
+	})
+
+	lobby.on('updateLobby', function(updates){
+		if (this.id === lobby.owner.id) {
+			// only allow the owner to change the lobby
+
+			if (typeof updates.name !== "undefined") {
+				lobby.options.name = updates.name;
+			}
+
+			if (typeof updates.password !== "undefined") {
+				lobby.options.password = updates.password;
+			}
+
+			lobby.options.onUpdate(lobby.getInfo());
+		}
 	})
 
 }

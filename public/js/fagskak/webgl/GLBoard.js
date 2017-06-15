@@ -16,10 +16,11 @@ var GLBoard = GLBoard || function(exports){
 	
 	function extend(extended, extendFrom, prototype) {
 		var proto = Object.create(extendFrom);
-
-		for(var key in prototype) {
-			proto[key] = prototype[key];
-		}
+		Object.assign(proto, prototype);
+		proto.constructor = GLBoard;
+		// for(var key in prototype) {
+		// 	proto[key] = prototype[key];
+		// }
 
 		extended.prototype = proto	
 	}
@@ -30,7 +31,16 @@ var GLBoard = GLBoard || function(exports){
 		glBoardInitialize: function(args) {
 			var args = args || {};
 			this.container = args.container;
-			this.camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, .1, 500);
+			
+			this.fillScreen = typeof args.fillScreen !== "undefined" ? args.fillScreen : true;
+
+			this.windowRef = this.fillScreen ? window : this.container;
+			if (!this.fillScreen) {
+				this.windowRef.innerHeight = this.windowRef.offsetHeight;
+				this.windowRef.innerWidth = this.windowRef.offsetWidth;
+			}
+			
+			this.camera = new THREE.PerspectiveCamera(60, this.windowRef.innerWidth/this.windowRef.innerHeight, .1, 500);
 			this.glRenderer = this.createGlRenderer();
 			this.cssScene = new THREE.Scene();
 			this.mouse = new THREE.Vector2();
@@ -40,23 +50,27 @@ var GLBoard = GLBoard || function(exports){
 			this.cssRenderer = this.createCssRenderer();
 			this.waitForNextFrame = [];
 
-			$(window).resize(function(){
-				this.SCREEN_WIDTH = window.innerWidth;
-				this.SCREEN_HEIGHT = window.innerHeight;
-				this.camera.aspect = this.SCREEN_WIDTH / this.SCREEN_HEIGHT;
-				this.camera.updateProjectionMatrix();
-				this.glRenderer.setSize(this.SCREEN_WIDTH, this.SCREEN_HEIGHT);
-				if (cssRenderer) {
-					cssRenderer.setSize(this.SCREEN_WIDTH, this.SCREEN_HEIGHT);				
-				}
-			});
+			console.log("fillscreen", this.fillScreen , args.fillScreen)
+			// if (this.fillScreen) {
+				$(this.windowRef).resize(()=>{
+					this.SCREEN_WIDTH = this.windowRef.innerWidth;
+					this.SCREEN_HEIGHT = this.windowRef.innerHeight;
+					this.camera.aspect = this.SCREEN_WIDTH / this.SCREEN_HEIGHT;
+					this.camera.updateProjectionMatrix();
+					this.glRenderer.setSize(this.SCREEN_WIDTH, this.SCREEN_HEIGHT);
+					if (this.cssRenderer) {
+						this.cssRenderer.setSize(this.SCREEN_WIDTH, this.SCREEN_HEIGHT);				
+					}
+				});				
+			// }
+
 			
 			this.animate();
 
 			this.loadCornerLabels(this.glScene);
 			this.createLight(this.glScene);
 
-			$(container).append(this.glRenderer.domElement);
+			$(this.container).append(this.glRenderer.domElement);
 			
 			this.createControls();
 		},
@@ -65,12 +79,12 @@ var GLBoard = GLBoard || function(exports){
 			scene.add( ambient );
 
 			var light = new THREE.PointLight( 0xffffff, 4, 100 );
-			light.position.set( 27, 50, 27 );
+			light.position.set( 25.5, 50, 25.5 );
 			light.castShadow = true;            // default false
 			light.shadow.mapSize.width = 4048;  // default 512
 			light.shadow.mapSize.height = 4048; // default 512
 			light.shadow.camera.near = 2;       // default 0.5
-			light.shadow.camera.far = 100;      // default 500
+			light.shadow.camera.far = 500;      // default 500
 			//light.shadow.camera.left = 500    // Not sure about this one + 
 																					// right, top and bottom, Do they still do anything?
 			scene.add( light );
@@ -85,14 +99,14 @@ var GLBoard = GLBoard || function(exports){
 			controls.enablePan = false;
 
 			controls.object.position.x=-2.7
-			controls.object.position.z=27
+			controls.object.position.z=25.5
 			controls.object.position.y=52
 
 			controls.mouseButtons = { ORBIT: THREE.MOUSE.RIGHT, ZOOM: THREE.MOUSE.MIDDLE, PAN: THREE.MOUSE.LEFT }
 
 			// controls.object.position.set(0, 100, 3000);
 
-			controls.target = new THREE.Vector3( 22, 0, 27 );
+			controls.target = new THREE.Vector3( 25.5, 0, 25.5 );
 			controls.update();
 
 			this.container.addEventListener("mousedown",this.onMouseDown.bind(this),false);
@@ -104,9 +118,15 @@ var GLBoard = GLBoard || function(exports){
 		onMouseDown: function(event) {
 			if (event.button === THREE.MOUSE.LEFT) {
 				event.preventDefault();
-				this.mouse.x = (event.clientX / this.glRenderer.domElement.width)*2 - 1;
-				this.mouse.y = -(event.clientY / this.glRenderer.domElement.height)*2 + 1;
+				var domElement = this.glRenderer.domElement;
+				var boundingBox;
+				
+				boundingBox = domElement.getBoundingClientRect();
+				this.mouse.x = (event.clientX/ boundingBox.width)*2  - 1 - (boundingBox.left / boundingBox.width)*2;
+				this.mouse.y = -(event.clientY / boundingBox.height)*2 + 1 + (boundingBox.top / boundingBox.height)  * 2;
 
+
+				console.log("mouse", this.mouse);
 				// this.mouse.y = event.clientY;
 
 				this.raycaster.setFromCamera(this.mouse, this.camera);
@@ -132,26 +152,27 @@ var GLBoard = GLBoard || function(exports){
 			event.clientY = event.touches[0].clientY;
 			onMouseDown(event);
 		},
-		runCustomAnimation: function(nowTime) {
-			var delta = nowTime - this.lastTime;
-			// take a copy waitForNextFrame, so we can clear it before 
-			var copyOfWaitForNextFrame = this.waitForNextFrame;
-			this.waitForNextFrame = [];
+		// runCustomAnimation: function(nowTime) {
+		// 	var delta = nowTime - this.lastTime;
+		// 	// take a copy waitForNextFrame, so we can clear it before 
+		// 	var copyOfWaitForNextFrame = this.waitForNextFrame;
+		// 	this.waitForNextFrame = [];
 			
-			for (var i = copyOfWaitForNextFrame.length - 1; i >= 0; i--) {
-				// execute all logic that is waiting to be executed, pass the time that has passed and what time it is now
-				copyOfWaitForNextFrame[i](delta, nowTime);
-			}
-		},
+		// 	for (var i = copyOfWaitForNextFrame.length - 1; i >= 0; i--) {
+		// 		// execute all logic that is waiting to be executed, pass the time that has passed and what time it is now
+		// 		copyOfWaitForNextFrame[i](delta, nowTime);
+		// 	}
+		// },
 		animate: function() {
 			// cube.rotation.x += 0.01;
 			if (this.running) {
 				requestAnimationFrame(this.animate.bind(this));			
 			}
+
 			var time = this.getTime();
 
 			// run custom animation, might be replaced at some point
-			this.runCustomAnimation(time);
+			// this.runCustomAnimation(time);
 
 			// use tween to avoid creating more cusom animations
 			TWEEN.update(time);
@@ -237,7 +258,7 @@ var GLBoard = GLBoard || function(exports){
 
 			// glRenderer.setClearColor(0xdddddd);
 			glRenderer.setClearColor(0xECF8FF);
-			glRenderer.setSize(window.innerWidth, window.innerHeight);
+			glRenderer.setSize(this.windowRef.innerWidth, this.windowRef.innerHeight);
 			glRenderer.shadowMap.enabled = true;
 			// renderer.shadowMap.type = THREE.BasicShadowMap;
 			glRenderer.shadowMapType = THREE.PCFSoftShadowMap;
@@ -248,7 +269,7 @@ var GLBoard = GLBoard || function(exports){
 		},
 		createCssRenderer: function() {
 			var cssRenderer = new THREE.CSS3DRenderer();
-			cssRenderer.setSize(window.innerWidth, window.innerHeight);
+			cssRenderer.setSize(this.windowRef.innerWidth, this.windowRef.innerHeight);
 			cssRenderer.domElement.style.position = 'absolute';
 			this.glRenderer.domElement.style.zIndex = 0;
 			cssRenderer.domElement.style.top = 0;
@@ -330,3 +351,4 @@ var GLBoard = GLBoard || function(exports){
 	}
 
 })(this);
+

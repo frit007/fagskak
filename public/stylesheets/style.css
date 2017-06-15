@@ -5,3 +5,17 @@
     border-radius: 20px;
     padding: 4px;
 }
+
+
+.modal-dialog.fillScreen {
+    width: 90%;
+    height: 90%;
+    margin: 15;
+    padding: 0;
+}
+
+.modal-content.fillScreen {
+    height: auto;
+    min-height: 100%;
+    border-radius: 0;
+}

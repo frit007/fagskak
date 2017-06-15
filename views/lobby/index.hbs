@@ -21,22 +21,24 @@
 
           <div class="tab-content">
             <div id="general_menu" class="tab-pane fade in active">
-                <h3>General</h3>
-
-
                 <a href="/lobby/leave"><button class="btn form-control">Leave Lobby</button></a>
             </div>
 
 
 
             <div id="spectator_settings" class="tab-pane fade">
-                <h3>Spectator settings</h3>
+                <div class="form-horizontal">
+                    {{!--<input type="checkbox"></input> Allow remote control--}}
+                    <label class="control-label col-sm-4" for="allow_remote_control">Allow remote control:</label>
+                    <div class="col-sm-8"> 
+                        <input type="checkbox" id="allow_remote_control" placeholder="Allow remote control">
+                    </div>
+                </div>
             </div>
             
             
             
             <div id="team_settings" class="tab-pane fade">
-                <h3>Team settings</h3>
                 <div class="form-horizontal">
                     <label class="control-label col-sm-4" for="team_name">Team name:</label>
                     <div class="col-sm-8"> 
@@ -53,19 +55,130 @@
             </div>
 
             <div id="game_settings" class="tab-pane fade">
-                <h3>Game settings</h3>
+                <div class="form-horizontal">
+                    <label class="control-label col-sm-4" for="lobby_name">Lobby name:</label>
+                    <div class="col-sm-8"> 
+                        <input type="text" class="form-control" id="lobby_name" placeholder="Enter lobby name">
+                    </div>
+                    <label class="control-label col-sm-4" for="lobby_password">Lobby password:</label>
+                    <div class="col-sm-8"> 
+                        <input type="text" class="form-control" id="lobby_password" placeholder="Enter passowrd">
+                    </div>
+                </div>
+                <button class="btn btn-primary" id="configure_board_button">Configure Board</button>
+
             </div>
         </div>
 
     </div>
 
 </div>
+
+
+
+
+
+<!-- configure webgl board -->
+<div id="configure_board_modal" class="modal fade" role="dialog">
+    <div class="modal-dialog fillScreen">
+
+    <!-- Modal content-->
+        <div class="modal-content fillScreen">
+            <div class="modal-header">
+               
+                {{!--<button type="button" class="close" data-dismiss="modal">&times;</button>--}}
+                <h4 class="modal-title">Configure Board</h4>
+            </div>
+            <div class="modal-body ">
+                <div class="col-sm-8">
+                    <div style="width: 600px; height: 600px;" id="webgl_container"></div>                
+                </div>
+                <div class="col-sm-4">
+                    
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a data-toggle="tab" href="#overview_menu">Overview</a></li>
+                        <li><a data-toggle="tab" href="#bind_field">Bind fields</a></li>
+                        <li><a data-toggle="tab" href="#create_board_gropu">Create board group</a></li>
+                        {{!--<li><a data-toggle="tab" href="#menu3">Menu 3</a></li>--}}
+                    </ul>
+
+                    <div id="overview_menu" class="tab-pane fade in active">
+
+                    </div>
+                    <div id="bind_field" class="tab-pane fade">
+                        {{!--<div class="form-horizontal">
+                            <label class="control-label col-sm-4" for="lobby_name">Lobby name:</label>
+                            <div class="col-sm-8"> 
+                                <input type="text" class="form-control" id="lobby_name" placeholder="Enter lobby name">
+                            </div>
+                            <label class="control-label col-sm-4" for="lobby_password">Lobby password:</label>
+                            <div class="col-sm-8"> 
+                                <input type="text" class="form-control" id="lobby_password" placeholder="Enter passowrd">
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" id="configure_board_button">Configure Board</button>--}}
+                        <select class="selectpicker" data-live-search="true">
+                            <option >Hot Dog, Fries and a Soda</option>
+                            <option >Burger, Shake and a Smile</option>
+                            <option >Sugar, Spice and all things nice</option>
+                        </select>
+                        <select class="selectpicker" data-live-search="true">
+                            <option >Hot Dog, Fries and a Soda</option>
+                            <option >Burger, Shake and a Smile</option>
+                            <option >Sugar, Spice and all things nice</option>
+                        </select>
+                    </div>
+                    <div id="create_board_gropu" class="tab-pane fade in active">
+
+                    </div>
+
+              
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-dismiss="modal" id="joinButton">Done</button>
+                {{!--<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>--}}
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+{{!--webglBoard --}}
+<script src="/js/datgui/dat.gui.js" type="text/javascript" ></script>
+<script src="/js/three.js" type="text/javascript"></script>
+<script src="/js/OrbitControls/OrbitControls.js"></script>
+<script src="/js/three/CSS3DRenderer.js" type="text/javascript"></script>
+<script src="/js/underscore.js"></script>
+
+{{!--Helpers--}}
+<script src="/js/tween/Tween.js"type="text/javascript"></script>
+<script src="/js/fun/improvedNoise.js" type="text/javascript"></script>
+{{!--Brick--}}
+<script src="/js/fagskak/Brick.js" type="text/javascript"></script>
+<script src="/js/fagskak/webgl/GLBrick.js" type="text/javascript"></script>
+{{!--Figure--}}
+<script src="/js/fagskak/Figure.js" type="text/javascript"></script>
+{{!--Board--}}
+<script src="/js/fagskak/Board.js" type="text/javascript"></script>
+<script src="/js/fagskak/webgl/GLBoard.js" type="text/javascript"></script>
+{{!--End of webglBoard--}}
+
+<script src="/js/fagskak/webgl/GLPath.js"></script>
+
+<script src="/js/bootstrap-select/bootstrap-select.min.js"></script>
+
+<script src="/js/lobby/configureBoard.js"></script>
+
 <script src="/js/datatables.min.js"></script>
 <script src="/js/socket.io.js" type="text/javascript"></script>
 <script src="/js/BootstrapAlert.js" type="text/javascript"></script>
 <script src="/js/TeamTable.js"></script>
 <script>
-    
+    // create the socket here so we can get the socket port
     var socket = io("localhost:{{socketPort}}/lobby");
 </script>
 <script src="/js/lobby/view.js"></script>

@@ -63,6 +63,7 @@ sessionMiddleware = expressSession({
 });
 
 var app = express();
+
 var server = app.listen(config.socketPort);
 var socket = require('socket.io')(server);
 

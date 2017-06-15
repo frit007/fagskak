@@ -17,6 +17,8 @@ socket.on('connection', function() {
 
     socket.emit("getTeams", {})
     socket.emit("getTeamOptions",{});
+    // request the lobby settings(this will get ignored if you are not the lobby owner.)
+    socket.emit("getLobbySettings",{});
 // $(document).ready(function() {
 //     $('#users').DataTable({
 //         "paging":   false,
@@ -74,20 +76,53 @@ socket.on("removeTeam", function(teamid) {
     delete teams[teamid]
 })
 
+socket.on("lobbySettings", function(settings) {
+    $("#game_menu").removeClass("hidden")
+
+    $("#lobby_name")
+    .off("change")
+    .val(settings.name)
+    .on("change", function() {
+        socket.emit('updateLobby', {
+            name: $("#lobby_name").val()
+        })
+    })
+
+    $("#lobby_password")
+    .off("change keyup copy paste cut")
+    .val(settings.password)
+    .on("change keyup copy paste cut", function() {
+        socket.emit('updateLobby', {
+            password: $("#lobby_password").val()
+        })
+    })
+
+    
+
+})
+
+
 socket.on("teamOptions", function(teamOptions){
     console.log("teamOptions, ", teamOptions);
     if (teamOptions.playable) {
         $("#spectator_menu").addClass("hidden");
-        $("#team_menu").removeClass("hidden").click();
+        $("#team_menu").removeClass("hidden").tab("show");
 
 
-        $("#team_name").val(teamOptions.name).off("change").on("change", function(){
+        $("#team_name")
+        .off("change")
+        .val(teamOptions.name)
+        .on("change", function(){
             socket.emit("teamUpdate", {
                 name: $("#team_name").val()
-            }
-            )
+            })
         });
-        $("#team_color").val(teamOptions.color).off("change").on("change", function() {
+
+
+        $("#team_color")
+        .off("change")
+        .val(teamOptions.color)
+        .on("change", function() {
             socket.emit("teamUpdate", {
                 color: $("#team_color").val()
             })
@@ -102,7 +137,7 @@ socket.on("teamOptions", function(teamOptions){
         // })
 
     } else {
-        $("#spectator_menu").removeClass("hidden").click();
+        $("#spectator_menu").removeClass("hidden").tab("show");
         $("#team_menu").addClass("hidden");
         
         

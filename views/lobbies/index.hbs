@@ -70,7 +70,7 @@
 
 
 <!-- Password Modal -->
-<div id="passwordModal" class="modal fade" role="dialog">
+<div id="passwordModal" class="modal fade" role="dialog" >
     <div class="modal-dialog">
 
     <!-- Modal content-->
@@ -204,7 +204,7 @@
 
                 if(data.usesPassword) {
                     $(template).html('<i class="fa fa-lock fa-2x" aria-hidden="true"></i>')
-                    $(template).on("click", function() {
+                    $(template).off("click").on("click", function() {
                         $("#passwordModal").modal("show");
 
                         // remove all existing bindings
@@ -217,7 +217,8 @@
                         })
                     })
                 } else {
-                    $(template).on("click", function() {
+                    $(template).html('JOIN')
+                    $(template).off("click").on("click", function() {
                         joinLobby("");
                     })
 
