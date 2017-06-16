@@ -9,7 +9,7 @@ var Figure = Figure || function() {
         this.loadMesh(scene, meshPath, function(mesh) {
             // mesh.position.set(12,5,12);
             this.mesh = mesh;
-            window.board = board;
+            // window.board = board;
             var brick = this.board.getBrick(x,z);
             console.log("bricks",this.board, brick);
             this.updatePosition()
