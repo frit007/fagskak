@@ -37,7 +37,7 @@ var mysqlConnection = mysql.createConnection({
     // database: config.db.host,
     multipleStatements: true
 });
-debugger;
+
 mysqlConnection.connect();
 console.log("DATABASE",config.db.database);
 
