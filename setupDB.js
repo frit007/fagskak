@@ -37,6 +37,7 @@ var mysqlConnection = mysql.createConnection({
     // database: config.db.host,
     multipleStatements: true
 });
+debugger;
 mysqlConnection.connect();
 console.log("DATABASE",config.db.database);
 
@@ -66,10 +67,12 @@ mysqlConnection.query("DROP DATABASE IF EXISTS "+config.db.database+"; CREATE DA
                 if (err) {
                     throw err;
                 }
-                var username = config.db.user + "@" + config.db.host
+                var username = "'" + config.db.user + "@" + config.db.host + "'"
                 var databaseEverything = config.db.database + ".*"
                 // create a user and give him basic rights
-                mysqlConnection.query("drop user if exists ?; create user ? identified by ?; grant DELETE, INSERT, SELECT, UPDATE on "+databaseEverything+" to ?; FLUSH PRIVILEGES", [username, username, config.db.password, username], function(err, data) {
+                mysqlConnection.query("drop user if exists ?@?; create user ?@? identified by ?; grant DELETE, INSERT, SELECT, UPDATE on "+databaseEverything+" to ?@?; FLUSH PRIVILEGES", 
+				[config.db.user, config.db.host, config.db.user, config.db.host, config.db.password, config.db.user, config.db.host],
+				function(err, data) {
                     if (err) {
                         throw err;
                     }
