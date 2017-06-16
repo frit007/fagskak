@@ -28,12 +28,9 @@ var Board = Board || function(){
             this.brickObjects = [];
             this.bricks = []; // board is access by using the x axis first then the z axis
 
-
-
-
             this.createBricks(this.glScene)
 
-            window.main = new Figure(5, 2, 5, 'example_three_figure', this.glScene, this);
+            // window.main = new Figure(5, 2, 5, 'example_three_figure', this.glScene, this);
             
         },
         raycaster: new THREE.Raycaster(),
