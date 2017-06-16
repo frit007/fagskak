@@ -38,19 +38,19 @@ var config = {
 	serverName: process.env.SERVERNAME,
 	session: {
 		secret: process.env.SESSION_SECRET
-	}
-
+	},
+	debug: true
 }
 // }
 var mysql = require('mysql');
 
-var connection = mysql.createConnection(config.db);
+var mysqlConnection = mysql.createConnection(config.db);
 
 // connect to mysql
-connection.connect();
+mysqlConnection.connect();
 
-var users = require('./modules/users.js')(connection, config);
-
+var users = require('./modules/users.js')(mysqlConnection, config);
+var boards = require('./modules/Boards.js')(mysqlConnection);
 // create a new lobby instance
 var Lobbies = require('./modules/Lobbies');
 var lobbies = new Lobbies();
@@ -97,7 +97,7 @@ var lobbiesRoutes = require('./routes/lobbies')(users, socket, sessionMiddleware
 var authRoutes = require('./routes/auth')(users);
 var questionRoutes = require('./routes/questions')(users);
 var fagskakRoutes = require('./routes/fagskak')(users);
-
+var boardRoutes = require('./routes/board')(users, boards);
 
 
 
@@ -135,8 +135,8 @@ app.use('/fagskak', fagskakRoutes);
 app.use('/lobby', lobbyRoutes);
 app.use('/lobbies', lobbiesRoutes)
 app.use('/auth', authRoutes);
-app.use('/questions',questionRoutes);
-
+app.use('/questions', questionRoutes);
+app.use('/boards', boardRoutes)
 
 
 // catch 404 and forward to error handler
