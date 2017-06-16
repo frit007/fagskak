@@ -128,22 +128,15 @@ var GLBoard = GLBoard || function(exports){
 			this.mouse.y = -(event.clientY / boundingBox.height)*2 + 1 + (boundingBox.top / boundingBox.height)  * 2;
 
 
-			console.log("mouse", this.mouse);
-			// this.mouse.y = event.clientY;
 
 			this.raycaster.setFromCamera(this.mouse, this.camera);
 
 			var intersects = this.raycaster.intersectObjects(this.brickObjects);
-			// console.log(intersects);
-			// var color = Math.random() * 0xffffff;
 			if (intersects.length > 0) {
 				return intersects[0].object.brick;
 			} else {
 				return null;
 			}
-			// var intersect = intersects[0];
-			// console.log("brick", intersect);
-			// return intersect ? intersect : null;
 		},
 
 		// onMouseDown: function(event) {
@@ -194,6 +187,9 @@ var GLBoard = GLBoard || function(exports){
 		// 		copyOfWaitForNextFrame[i](delta, nowTime);
 		// 	}
 		// },
+		getYPosition: function() {
+			return this.getBrick(8,8).meshes[0].position.y;
+		},
 		animate: function() {
 			// cube.rotation.x += 0.01;
 			if (this.running) {
@@ -233,19 +229,19 @@ var GLBoard = GLBoard || function(exports){
 
 
 				// SV text
-				var svGEO = new THREE.TextGeometry( "SV", textGeometryProperties);
+				var svGEO = new THREE.TextGeometry( "SW", textGeometryProperties);
 				var sv = new THREE.Mesh( svGEO, textMaterial );
 				sv.rotation.x=4.7
 				sv.rotation.z=4.7
-				sv.position.set(2-1.5, 3, 1-1.5)
+				sv.position.set(2-1.5, 3, 1-2.0)
 				scene.add( sv );
 
 				// NV text
-				var nvGEO = new THREE.TextGeometry( "NV", textGeometryProperties);
+				var nvGEO = new THREE.TextGeometry( "NW", textGeometryProperties);
 				var nv = new THREE.Mesh( nvGEO, textMaterial );
 				nv.rotation.x=4.7
 				nv.rotation.z=4.7
-				nv.position.set(47-1.5, 3, 1-1.5)
+				nv.position.set(47-1.5, 3, 1-2.5)
 				scene.add( nv );
 
 				// NE text
