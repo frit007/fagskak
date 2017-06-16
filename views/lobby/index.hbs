@@ -26,7 +26,7 @@
 
 
 
-            <div id="spectator_settings" class="tab-pane fade">
+            <div id="spectator_settings" class="tab-pane fade ">
                 <div class="form-horizontal">
                     {{!--<input type="checkbox"></input> Allow remote control--}}
                     <label class="control-label col-sm-4" for="allow_remote_control">Allow remote control:</label>
@@ -38,7 +38,7 @@
             
             
             
-            <div id="team_settings" class="tab-pane fade">
+            <div id="team_settings" class="tab-pane fade ">
                 <div class="form-horizontal">
                     <label class="control-label col-sm-4" for="team_name">Team name:</label>
                     <div class="col-sm-8"> 
@@ -54,7 +54,7 @@
                 
             </div>
 
-            <div id="game_settings" class="tab-pane fade">
+            <div id="game_settings" class="tab-pane fade ">
                 <div class="form-horizontal">
                     <label class="control-label col-sm-4" for="lobby_name">Lobby name:</label>
                     <div class="col-sm-8"> 
@@ -102,10 +102,11 @@
                         {{!--<li><a data-toggle="tab" href="#menu3">Menu 3</a></li>--}}
                     </ul>
 
-                    <div id="overview_menu" class="tab-pane fade in active">
+                    <div id="overview_menu" class="tab-pane fade modalMenu in active">
                         <h3>HEllo</h3>
                     </div>
-                    <div id="bind_field" class="tab-pane fade">
+                    <div id="bind_field" class="tab-pane fade modalMenu" style="display:none">
+                        <div id="bind_fields_info"></div>
                         {{!--<div class="form-horizontal">
                             <label class="control-label col-sm-4" for="lobby_name">Lobby name:</label>
                             <div class="col-sm-8"> 
@@ -117,27 +118,29 @@
                             </div>
                         </div>
                         <button class="btn btn-primary" id="configure_board_button">Configure Board</button>--}}
-                        <select class="selectpicker" data-live-search="true">
-                            <option >Hot Dog, Fries and a Soda</option>
-                            <option >Burger, Shake and a Smile</option>
-                            <option >Sugar, Spice and all things nice</option>
+                        <h4>Board Group</h4>
+                        <select class="selectpicker" id="board_group" data-live-search="true" >
                         </select>
-                        <select class="selectpicker" data-live-search="true">
-                            <option >Hot Dog, Fries and a Soda</option>
-                            <option >Burger, Shake and a Smile</option>
-                            <option >Sugar, Spice and all things nice</option>
+
+                        <h4>Question Category</h4>
+                        <select class="selectpicker" id="category" data-live-search="true">
                         </select>
+
+                        <h4>Difficulty(1-10)</h4>
+                        <input type="number" class="form-control" min="1" max="10" type="text" value="5">
+
                     </div>
-                    <div id="create_board_group" class="tab-pane fade">
-                        <div class="form-horizontal">
-                            <label class="control-label col-sm-4" for="board_group_name">Board Group name:</label>
-                            <div class="col-sm-8"> 
+                    <div id="create_board_group" class="tab-pane fade modalMenu" style="display:none">
+                        <div id="create_board_info"></div>
+                        <div class="form-group">
+                            <label class="control-label " for="board_group_name">Board Group name:</label>
+                             
                                 <input type="text" class="form-control" id="board_group_name" placeholder="Enter name">
-                            </div>
-                            <label class="control-label col-sm-4" for="team_color">Click on the board to select</label>
-                            <div class="col-sm-8"> 
-                                <input type="color" class="form-control" id="team_color" placeholder="Enter color">
-                            </div>
+                            
+                            <label class="control-label " for="create_board_group_button">Click on the board to select</label>
+                             
+                            <button class="btn btn-primary btn-block" id="create_board_group_button">Create</button>
+                            
                         </div>
                     </div>
 
@@ -155,6 +158,7 @@
 
 
 
+<script src="/js/BootstrapAlert.js" type="text/javascript"></script>
 
 {{!--webglBoard --}}
 <script src="/js/datgui/dat.gui.js" type="text/javascript" ></script>
@@ -186,7 +190,6 @@
 
 <script src="/js/datatables.min.js"></script>
 <script src="/js/socket.io.js" type="text/javascript"></script>
-<script src="/js/BootstrapAlert.js" type="text/javascript"></script>
 <script src="/js/TeamTable.js"></script>
 <script>
     // create the socket here so we can get the socket port
