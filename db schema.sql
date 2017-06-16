@@ -50,7 +50,7 @@ CREATE TABLE `board_bindings` (
 
 CREATE TABLE `board_groups` (
 	`id` INT(11) AUTO_INCREMENT NOT NULL,
-	`name` VARCHAR(255) NOT NULL,
+	`name` VARCHAR(255) NOT NULL UNIQUE,
 	PRIMARY KEY (`id`)
 );
 
@@ -83,6 +83,7 @@ CREATE TABLE `question_views` (
 CREATE TABLE `question_categories` (
 	`id` INT(11) AUTO_INCREMENT NOT NULL,
 	`name` VARCHAR(255) NOT NULL,
+	`color` VARCHAR(255) NOT NULL
 	PRIMARY KEY (`id`)
 );
 
@@ -182,7 +183,7 @@ ALTER TABLE `moves` ADD CONSTRAINT `moves_fk2` FOREIGN KEY (`question_attempt_id
 
 ALTER TABLE `moves` ADD CONSTRAINT `moves_fk3` FOREIGN KEY (`group_id`) REFERENCES `game_groups`(`id`);
 
-ALTER TABLE `board_field_groups` ADD CONSTRAINT `board_field_groups_fk0` FOREIGN KEY (`board_group_id`) REFERENCES `board_groups`(`id`);
+ALTER TABLE `board_field_groups` ADD CONSTRAINT `board_field_groups_fk0` FOREIGN KEY (`board_group_id`) REFERENCES `board_groups`(`id`) ON DELETE CASCADE;
 
 ALTER TABLE `board_field_groups` ADD CONSTRAINT `board_field_groups_fk1` FOREIGN KEY (`board_field_id`) REFERENCES `board_fields`(`id`);
 
