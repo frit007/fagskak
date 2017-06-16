@@ -1,8 +1,8 @@
 
 
 function GLBoardSelector(board, color, active) {
-
-    this.path = new GLPath(board.glScene, board, color);
+    
+    this.path = new GLPath(board, color);
     this.selected = [];
     this.board = board;
 
@@ -32,20 +32,30 @@ GLBoardSelector.prototype = {
         return difference;
     },
 
-    enable: function() {
-        this.active = true;
+    clear: function() {
         this.selected = [];
-    },
-    disable: function() {
-        this.selected = [];
-        this.active = false;
         this.path.resetParticles();
+
     },
 
+    enable: function() {
+        this.active = true;
+        this.clear();
+    },
+    disable: function() {
+        this.active = false;
+        this.clear();
+    },
+
+    /**
+     * get selected coordinates in object format
+     * 
+     * @returns [{x:x,y:y},...] 
+     */
     getCoordinates: function() {
         var coords = [];
         for (var index = 0; index < this.selected.length; index++) {
-            var Brick = this.selected[index];
+            var brick = this.selected[index];
             coords.push({
                 x: brick.x,
                 z: brick.z
@@ -54,8 +64,23 @@ GLBoardSelector.prototype = {
         return coords;
     },
 
+
+    /**
+     * get selected coordiantes in array format
+     * 
+     * @returns [[x,z],...] 
+     */
+    getArrayCoordinates: function() {
+        var coords = [];
+        for (var index = 0; index < this.selected.length; index++) {
+            var brick = this.selected[index];
+            coords.push([brick.x, brick.z]);
+        }
+        return coords;
+    },
+
     setupListener: function() {
-        function getSelectedBricks(startBrick, endBrick) {
+        var getSelectedBricks = (startBrick, endBrick) => {
             if (startBrick === null || endBrick === null) {
                 return [];
             }
@@ -65,7 +90,7 @@ GLBoardSelector.prototype = {
             var maxX = Math.max(startBrick.x, endBrick.x);
             var minZ = Math.min(startBrick.z, endBrick.z);
             var maxZ = Math.max(startBrick.z, endBrick.z);
-
+            // debugger;
             for (var x = minX; x <= maxX; x++) {
                 for (var z = minZ; z <= maxZ; z++) {
                     var brick = this.board.getBrick(x,z)
@@ -76,6 +101,16 @@ GLBoardSelector.prototype = {
             }
             return selected;
         }
+
+        var updateSelected = (event) => {
+                endBrick = this.board.getClickedBrick(event);
+                newSelected = getSelectedBricks(startBrick, endBrick);
+                selectedBricks = this.getSelectedDifference(newSelected);
+                 
+                this.path.update(selectedBricks);
+                return selectedBricks;
+        }
+
 
         var startBrick = null;
         var endBrick, selectedBricks, difference;
@@ -93,7 +128,8 @@ GLBoardSelector.prototype = {
         this.board.container.addEventListener("mouseup", (event) => {
             if (event.buttons == event.buttons == 1 /*left click*/ && startBrick !== null) {
                 // endBrick = this.board.getClickedBrick(event);
-                this.selected = selectedBricks;
+
+                this.selected = updateSelected(event);
                 startBrick = null;
                 endBrick = null;
             }
@@ -102,11 +138,12 @@ GLBoardSelector.prototype = {
         this.board.container.addEventListener("mousemove", (event) => {
             // console.log("mousemove");
             if (startBrick !== null) {
-                endBrick = this.board.getClickedBrick(event);
-                newSelected = getSelectedBricks(startBrick, endBrick);
-                selectedBricks = this.getSelectedDifference(newSelected);
+                updateSelected(event)
+                // endBrick = this.board.getClickedBrick(event);
+                // newSelected = getSelectedBricks(startBrick, endBrick);
+                // selectedBricks = this.getSelectedDifference(newSelected);
                  
-                this.path.update(selectedBricks);
+                // this.path.update(selectedBricks);
             }
         })
     }
