@@ -145,7 +145,7 @@ module.exports = function(mysql, config) {
 
 				if (token.refresh_token != undefined && googleData.refresh_token === undefined) {
 					googleData.refresh_token = token.refresh_token
-				}
+					}
 				// console.log("DATA", googleData);
 
 
@@ -169,12 +169,12 @@ module.exports = function(mysql, config) {
 					} else {
 						// if the user profile does not yet exist create it
 						mysql.query('insert into users(display_name,google_id) values(?,?)', 
-							[profileInfo.display_name,profileInfo.google_id],
-							function(err,insertResults,fields) {
-								if (err) {
-									callback(err);
-									return;
-								}
+						[profileInfo.display_name,profileInfo.google_id],
+						function(err,insertResults,fields) {
+							if (err) {
+								callback(err);
+								return;
+							}
 							// console.log("insertError", err);
 							// console.log("insertResults",insertResults);
 							profileInfo.id = insertResults.insertId;
@@ -207,7 +207,11 @@ module.exports = function(mysql, config) {
 			console.log(req.session.user);
 
 			if (typeof req.session.user === "undefined") {
-				res.redirect("/auth");
+				if (req.method == "GET") {
+					res.redirect("/auth");				
+				} else {
+					res.send(400, "Not signed in")
+				}
 				return;
 			}
 			var user = cachedUsers[req.session.user.id];
