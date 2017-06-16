@@ -29,9 +29,9 @@ var fragmentShader =
 
 var discTexture = THREE.ImageUtils.loadTexture( 'images/disc.png' );
 
-var GLPath = function(scene, board, color) {
+var GLPath = function(board, color) {
 	this.bricks = [];
-    this.scene = scene;
+    this.scene = board.glScene;
 	this.board = board;
 
 	this.particles = new THREE.Geometry();
@@ -57,7 +57,7 @@ var GLPath = function(scene, board, color) {
 	
 	this.particleSystem = new THREE.Points(this.particles, this.particleMaterial);
 
-	scene.add(this.particleSystem);
+	this.scene.add(this.particleSystem);
 
 }
 
@@ -97,6 +97,12 @@ GLPath.prototype = {
 
 		// eval("selector.path.particles.rotateX(0)")
 	},
+	hide: function() {
+		this.particleSystem.visible = false;
+	},
+	show: function() {
+		this.particleSystem.visible = true;
+	},
 
 	update: function(bricks, force) {
 		// debugger;
@@ -133,7 +139,8 @@ GLPath.prototype = {
 		}
 
 		this.particleIndex = 0;
-		var brickY = bricks[0].meshes[0].position.y;
+		// var brickY = bricks[0].meshes[0].position.y;
+		var brickY = this.board.getYPosition();
 		var width = this.board.boardDim.brickDim.x;
 		var height = this.board.boardDim.brickDim.z;
 		var placeParticle = (x, z) => {
