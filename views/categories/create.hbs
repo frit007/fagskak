@@ -1,0 +1,27 @@
+<h1>Create Category</h1>
+
+{{#if error}}
+	<div class="alert alert-danger">
+		<strong>Error!</strong> {{error}}
+	</div>
+{{/if}}
+
+
+<div class="col-xs-10 col-xs-offset-1">
+	<div class="well bs-component">
+		<form class="form-horizontal" action="/categories/store" method="post">
+			<fieldset>
+				<div class="form-group">
+					<label for="name">Category name:</label>
+					<input name="name" type="name" class="form-control" id="name">
+				</div>
+				<div class="form-group">
+					<label for="color">Color:</label>
+					<input name="color" type="color" class="form-control" id="color">
+				</div>
+				<button type="submit" class="btn btn-primary">Create</button>
+				<a href="/categories" class="btn btn-default">back</a>
+			</fieldset>
+		</form>
+	</div>
+</div>

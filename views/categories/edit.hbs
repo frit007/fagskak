@@ -1,0 +1,33 @@
+{{#if category}}
+	{{#if error}}
+		<div class="alert alert-danger">
+			<strong>Error!</strong> {{error}}
+		</div>
+	{{/if}}
+
+
+	{{#with category}}
+		<h1>Edit Category</h1>
+		<div class="col-xs-10 col-xs-offset-1">
+			<div class="well bs-component">
+				<form class="form-horizontal" action="/categories/update/{{id}}" method="post">
+					<fieldset>
+						<div class="form-group">
+							<label for="name">Category name:</label>
+							<input name="name" type="name" class="form-control" value="{{name}}" id="name">
+						</div>
+						<div class="form-group">
+							<label for="color">Color:</label>
+							<input name="color" type="color" class="form-control" value="{{color}}" id="color">
+						</div>
+						<button type="submit" class="btn btn-primary">Update</button>
+						<a href="/categories" class="btn btn-default">back</a>
+					</fieldset>
+				</form>
+			</div>
+		</div>
+	{{/with}}
+{{else}}
+	<h1>That Category does not exist</h1>
+	<a href="/categories" class="btn btn-default">back</a>
+{{/if}}

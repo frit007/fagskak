@@ -51,6 +51,7 @@ mysqlConnection.connect();
 
 var users = require('./modules/users.js')(mysqlConnection, config);
 var boards = require('./modules/Boards.js')(mysqlConnection);
+var categories = require('./modules/Categories.js')(mysqlConnection);
 // create a new lobby instance
 var Lobbies = require('./modules/Lobbies');
 var lobbies = new Lobbies();
@@ -98,7 +99,7 @@ var authRoutes = require('./routes/auth')(users);
 var questionRoutes = require('./routes/questions')(users);
 var fagskakRoutes = require('./routes/fagskak')(users);
 var boardRoutes = require('./routes/board')(users, boards);
-
+var categoriesRoutes = require('./routes/categories')(users, categories);
 
 
 
@@ -136,8 +137,8 @@ app.use('/lobby', lobbyRoutes);
 app.use('/lobbies', lobbiesRoutes)
 app.use('/auth', authRoutes);
 app.use('/questions', questionRoutes);
-app.use('/boards', boardRoutes)
-
+app.use('/boards', boardRoutes);
+app.use('/categories', categoriesRoutes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

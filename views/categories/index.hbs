@@ -1,0 +1,37 @@
+<div class="container">
+    <div class="row-fluid">
+        <div class="col-xs-6">
+            <h3>Categories</h3>
+        </div>
+        <div class="col-xs-6">
+            <h3 class="pull-right">
+                <a class="btn btn-primary" href="categories/create"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></a>
+                
+            </h3>
+        </div>
+    </div>
+</div>
+
+<div class="box-content nopadding">
+    <table id="categories_table" class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>color</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody id="lobby_body">
+            {{#each categories}}
+                <tr>
+                    <td>{{name}}</td>
+                    <td style="color:{{color}}">{{color}}</td>
+                    <td>
+                        <a class="btn" href="/categories/edit/{{id}}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                    </td>
+                </tr>
+            {{/each}}
+        </tbody>
+    </table>
+
+</div>
