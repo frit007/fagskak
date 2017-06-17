@@ -1,2 +1,2 @@
 # fagskak
-This project was made purely for educational purposes
+Setup guide in the wiki
