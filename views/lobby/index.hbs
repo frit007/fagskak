@@ -103,7 +103,7 @@
                     </ul>
 
                     <div id="overview_menu" class="tab-pane fade modalMenu in active">
-                        <h3>HEllo</h3>
+                        <h3>EMPTY</h3>
                     </div>
                     <div id="bind_field" class="tab-pane fade modalMenu" style="display:none">
                         <div id="bind_fields_info"></div>
@@ -193,6 +193,7 @@
 <script src="/js/TeamTable.js"></script>
 <script>
     // create the socket here so we can get the socket port
-    var socket = io("localhost:{{socketPort}}/lobby");
+    //var socket = io("localhost:{{socketPort}}/lobby");
+    var socket = io(window.location.host+"/lobby");
 </script>
 <script src="/js/lobby/view.js"></script>
