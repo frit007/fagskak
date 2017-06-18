@@ -15,13 +15,20 @@ if(status.error) {
 	throw status.error
 }
 
+// since host always come up with diffent names for the database name it is dynamically prefix
+// default it to DB_
+var prefix = process.env.DB_PREFIX || "DB_"
+function getDBEnv(envName) {
+	return process.env[prefix + envName];
+}
+
 var config = {
 	// process.env
 	db: {
-		host: process.env.DB_HOST,
-		user: process.env.DB_USER,
-		password: process.env.DB_PASSWORD,
-		database: process.env.DB_DATABASE
+		host: getDBEnv("HOST"),
+		user: getDBEnv("USER"),
+		password: getDBEnv("PASSWORD"),
+		database: getDBEnv("DB"),
 	},
 }
 
