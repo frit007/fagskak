@@ -4,7 +4,7 @@ var router = express.Router();
 
 // var socketGroup = require('./modules/socketGroup');
 
-module.exports = function(users, socket, sessionMiddleware, lobbies) {
+module.exports = function(users, lobbies) {
 
 	router.use(users.requireLogin);
 	
@@ -39,23 +39,6 @@ module.exports = function(users, socket, sessionMiddleware, lobbies) {
 			}
 		})
 	});
-
-
-	var lobbiesNamespace = socket.of('/lobbies');
-	
-	lobbiesNamespace.use(function(socket, next) {
-		// get user session 
-		sessionMiddleware(socket.request, socket.request.res, next)
-	});
-		// make sure the user is logged in
-	lobbiesNamespace.use(users.requireSocketLogin);
-
-
-	lobbiesNamespace.on('connection',function(client) {
-
-		client.user.addToGroup(lobbies);
-	})
-
 
 	return router;
 }

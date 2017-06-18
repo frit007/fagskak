@@ -7,7 +7,7 @@
 
 
 <script type="text/javascript">
-	var socket = io("localhost:3100");
+	var socket = io("localhost:{{socketPort}}");
 
 	socket.on('log', function(data) {
 		console.log("log", data)

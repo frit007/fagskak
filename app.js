@@ -31,8 +31,8 @@ var config = {
 		password: getDBEnv("PASSWORD"),
 		database: getDBEnv("DB"),
 	},
-	port: process.env.HTTP_PORT | 3000,
-	socketPort: process.env.SOCKET_PORT | 3100,
+	port: process.env.HTTP_PORT || 3000,
+	socketPort: process.env.SOCKET_PORT || 3100,
 	googleOauth: {
 		clientId: process.env.GOOGLEOAUTH_CLIENT_ID,
 		clientSecret: process.env.GOOGLEOAUTH_CLIENT_SECRET
@@ -67,36 +67,30 @@ sessionMiddleware = expressSession({
 
 var app = express();
 
-var server = app.listen(config.socketPort);
-var socket = require('socket.io')(server);
+// var server = app.listen(config.socketPort);
 
-socket.use(function(socket, next) {
-	// get user session 
-	sessionMiddleware(socket.request, socket.request.res, next)
-});
+// socket.use(function(socket, next) {
+// 	// get user session 
+// 	sessionMiddleware(socket.request, socket.request.res, next)
+// });
 
-// make sure the user is logged in
-socket.use(users.requireSocketLogin);
+// // make sure the user is logged in
+// socket.use(users.requireSocketLogin);
 
-socket.sockets.on('connection', function(client) {
-	// client.emit("log", {newsEvent:"GRAND NEWS"});
+// socket.sockets.on('connection', function(client) {
+// 	// client.emit("log", {newsEvent:"GRAND NEWS"});
 
-	client.on("log", function(log) {
-		console.log("log (user: "+client.user.display_name+")", log)
-	})
-});
-function goOn () {
-	return "11";
-}
-socket.sockets.on('gamer', goOn);
-socket.sockets.removeListener('gamer', goOn);
+// 	client.on("log", function(log) {
+// 		console.log("log (user: "+client.user.display_name+")", log)
+// 	})
+// });
 
 /*---------------- SETUP ROUTES ----------------*/
 
 var indexRoutes = require('./routes/index');
 var usersRoutes = require('./routes/users')(users);
-var lobbyRoutes = require('./routes/lobby')(users, socket, sessionMiddleware, lobbies);
-var lobbiesRoutes = require('./routes/lobbies')(users, socket, sessionMiddleware, lobbies);
+var lobbyRoutes = require('./routes/lobby')(users, lobbies);
+var lobbiesRoutes = require('./routes/lobbies')(users, lobbies);
 var authRoutes = require('./routes/auth')(users);
 var questionRoutes = require('./routes/questions')(users);
 var fagskakRoutes = require('./routes/fagskak')(users);
@@ -162,4 +156,48 @@ app.use(function(err, req, res, next) {
 });
 
 
-module.exports = app;
+/**
+ * Normalize a port into a number, string, or false.
+ */
+function normalizePort(val) {
+  var port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
+
+/**
+ * Get port from environment and store in Express.
+ */
+
+var port = normalizePort(process.env.PORT || '3000');
+app.set('port', port);
+
+/**
+ * Create HTTP server.
+ */
+
+var http = require('http');
+
+var server = http.createServer(app);
+
+
+/*END OF HTTP SETUP */
+/* START SOCKET SETUP */
+
+var socket = require('socket.io')(server);
+
+require("./sockets/lobbies.js")(users, socket, sessionMiddleware, lobbies);
+require("./sockets/lobby.js")(users, socket, sessionMiddleware, lobbies);
+
+// module.exports = app;
+module.exports = server;
