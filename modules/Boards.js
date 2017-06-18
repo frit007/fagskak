@@ -4,34 +4,35 @@ module.exports = function(mysqlPool) {
     var Board = {
         create: function(name, fields, callback) {
             mysqlPool.getConnection( function(err, connection) {
-                mysql.beginTransaction(function(err) {
+                connection.beginTransaction(function(err) {
                     if (err) {
                         connection.release();
                         callback(err);
                         return;
                     }
-                    mysql.query('INSERT INTO board_groups(name) VALUES (?)', [name], function(err, group) {
+                    connection.query('INSERT INTO board_groups(name) VALUES (?)', [name], function(err, group) {
                         if (err) {
-                            connection.release();
                             callback(err);
-                            mysql.rollback();
+                            connection.rollback(function() {
+                                connection.release();
+                            });
                             return;
                         }
                         
                         
-                        mysql.query('INSERT INTO board_field_groups(board_field_id, board_group_id) SELECT bf.id, ? from board_fields as bf where (bf.x,bf.z) in (?) and bf.y = 0',
+                        connection.query('INSERT INTO board_field_groups(board_field_id, board_group_id) SELECT bf.id, ? from board_fields as bf where (bf.x,bf.z) in (?) and bf.y = 0',
                         [group.insertId, fields],
                         function(err, data) {
                             if (err) {
                                 callback(err)
-                                mysql.rollback(function() {                                
+                                connection.rollback(function() {                                
                                     connection.release();
                                 });
                                 return;
                             }
-                            mysql.commit(function(err) {
+                            connection.commit(function(err) {
                                 if (err) {
-                                    mysql.rollback(function(err) {
+                                    connection.rollback(function(err) {
                                         connection.release();
                                         callback(err);
                                     })
@@ -50,7 +51,7 @@ module.exports = function(mysqlPool) {
         },
         getBoards: function(callback) {
             mysqlPool.getConnection( function(err, connection) {
-                mysql.query("select bf.x, bf.z, bg.name, bg.id as board_group_id "+
+                connection.query("select bf.x, bf.z, bg.name, bg.id as board_group_id "+
                 "from board_groups as bg "+
                 "join board_field_groups as bfg on bfg.board_group_id = bg.id "+
                 "join board_fields as bf on bf.id = bfg.board_field_id",

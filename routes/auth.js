@@ -36,7 +36,7 @@ module.exports = function(users) {
             users.getUserProfile(token,function(err, userResponse) {
                 if (err) {
                     console.log("error", err);				
-					res.status(500).render({error: err});
+					res.status(500).render("error",{error: err});
 					return;
                     // throw err;
                 }
