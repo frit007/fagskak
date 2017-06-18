@@ -62,8 +62,8 @@ var GLPath = function(board, color) {
 
 GLPath.prototype = {
 	levitate: 3,
-	// used to indicate how many total particles there are(the max theoretical)
-	particleCount: 1500,
+	// used to indicate how many total particles there are(the max theoretical amount is 1048)
+	particleCount: 1000,
 	particleIndex: 0,
 	startPlace: 99999999999,
 
