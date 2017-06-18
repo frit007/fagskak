@@ -24,7 +24,12 @@ module.exports = function(mysql) {
 
         get: function(callback) {
             mysql.query('SELECT * from question_categories', function(err, rows) {
-                callback(err, rows);
+                var categories = {};
+                for (var index = 0; index < rows.length; index++) {
+                    var row = rows[index];
+                    categories[row.id] = row;
+                }
+                callback(err, categories);
             });
         },
 
@@ -36,7 +41,7 @@ module.exports = function(mysql) {
 
         delete: function(id, callback) {
             mysql.query('DELETE FROM question_categories where id = ?', [id], function(err, row) {
-
+                callback(err);
             });
         }
     }
