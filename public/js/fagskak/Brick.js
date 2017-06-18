@@ -172,13 +172,13 @@ var Brick = Brick || (function() {
 		getMeshes: function() {
 			return this.meshes;
 		},
-		getHeightAtTime: function(time, animationProgress) {
-			animationProgress = animationProgress || this.getAnimationProgressAtTime(time);
+		// getHeightAtTime: function(time, animationProgress) {
+		// 	animationProgress = animationProgress || this.getAnimationProgressAtTime(time);
 
-			var differenceInY = this.y - this.lastY;
-			var currentY = this.lastY + (differenceInY*animationProgress);
-			return currentY;
-		}
+		// 	var differenceInY = this.y - this.lastY;
+		// 	var currentY = this.lastY + (differenceInY*animationProgress);
+		// 	return currentY;
+		// }
     }
 
     return Brick;

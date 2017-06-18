@@ -58,7 +58,6 @@ var GLPath = function(board, color) {
 	this.particleSystem = new THREE.Points(this.particles, this.particleMaterial);
 
 	this.scene.add(this.particleSystem);
-
 }
 
 GLPath.prototype = {
@@ -154,6 +153,7 @@ GLPath.prototype = {
 		}
 		
 		
+		
 		for (var index = 0; index < bricks.length; index++) {
 			var brick = bricks[index];
 			// debugger;
@@ -177,65 +177,37 @@ GLPath.prototype = {
 
 		}
 		this.forceUpdate();
-
-		// this.particleGeometry = new THREE.Geometry();
-		// for (var i = 0; i < 100; i++)
-		// 	this.particleGeometry.vertices.push( new THREE.Vector3(0,0,0) );
-
-		// this.attributes = 
-		// {
-		// 	customColor:	 { type: 'c',  value: [] },
-		// 	customOffset:	 { type: 'f',  value: [] },
-		// };
-
-		// var particleCount = this.particleGeometry.vertices.length
-		// for( var v = 0; v < particleCount; v++ ) 
-		// {
-		// 	this.attributes.customColor.value[ v ] = new THREE.Color().setHSL( 1 - v / particleCount, 1.0, 0.5 );
-		// 	this.attributes.customOffset.value[ v ] = 6.282 * (v / particleCount); // not really used in shaders, move elsewhere
-		// }
-
-		// // values that are constant for all particles during a draw call
-		// this.uniforms = 
-		// {
-		// 	time:      { type: "f", value: 1.0 },
-		// 	texture:   { type: "t", value: discTexture },
-		// };
-
-		// this.shaderMaterial = new THREE.ShaderMaterial( 
-		// {
-		// 	uniforms: 		this.uniforms,
-		// 	attributes:     this.attributes,
-		// 	vertexShader:   vertexShader,
-		// 	fragmentShader: fragmentShader,
-		// 	transparent: true, // alphaTest: 0.5,  // if having transparency issues, try including: alphaTest: 0.5, 
-		// 	// blending: THREE.AdditiveBlending, depthTest: false,
-		// 	// I guess you don't need to do a depth test if you are alpha blending
-		// 	// 
-		// });
-
-		// this.particleCube = new THREE.ParticleSystem( this.particleGeometry, this.shaderMaterial );
-		// this.particleCube.position.set(0, 85, 0);
-		// this.particleCube.dynamic = true;
-		// // in order for transparency to work correctly, we need sortParticles = true.
-		// //  but this won't work if we calculate positions in vertex shader,
-		// //  so positions need to be calculated in the update function,
-		// //  and set in the geometry.vertices array
-		// this.particleCube.sortParticles = true;
-		// this.scene.add( this.particleCube );
-
 	},
 	addBricks: function(bricks) {
 		// var originalCount = 
 		for (var index = 0; index < bricks.length; index++) {
 			var brick = bricks[index];
 			if (this.bricks.indexOf(brick) === -1) {
-				bricks
+				this.bricks.push(brick);
 			}
 		}
 	},
 	removeBricks: function(bricks) {
-
+		for (var index = bricks.length -1; index >= 0; index--) {
+			var brick = bricks[index];
+			var brickIndex = this.bricks.indexOf(brick);
+			if (brickIndex !== -1) {
+				this.bricks.splice(brickIndex, 1)
+			}
+		}
+	},
+	setColor: function(color) {
+		this.color = color;
+		if (typeof color === "object") {
+			this.particleMaterial.color = color;
+		} else {
+			this.particleMaterial.color = new THREE.Color(color);
+		}
+	},
+	copy: function() {
+		var copy =  new GLPath(this.board, this.color);
+		copy.update(this.bricks);
+		return copy;
 	}
 
 }

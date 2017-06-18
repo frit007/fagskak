@@ -16,7 +16,7 @@ module.exports = function(users, boards) {
         })
 	});
 
-    router.get('/getBoards', function(req,res,next) {
+    router.get('/get', function(req,res,next) {
         boards.getBoards(function(err, boards) {
             if (err) {
                 res.send(400, err);

@@ -43,8 +43,10 @@
 				});
 
 
-				var boardGroupSelect = $("#board_group")
-				var categorySelect = $("#category")
+				var boardGroupSelect = $("#board_group");
+				var categorySelect = $("#category");
+				
+
 				window.boardGroupSelect = boardGroupSelect;
 				
 				var boardGroupPath = new GLPath(glboard);
@@ -53,7 +55,7 @@
 				boardGroupPath.hide();
 				function updateBoardGroups() {
 					$.ajax({
-						url:"/boards/getBoards",
+						url:"/boards/get",
 						success:function(boardGroupJSON) {
 							var boardGroups = JSON.parse(boardGroupJSON);
 							window.boardGroups = boardGroups;
@@ -73,7 +75,6 @@
 								// console.log(selected);
 								// debugger;
 								updatePath();
-
 							});
 							for(var key in boardGroups) {
 								var boardGroup = boardGroups[key];
@@ -96,7 +97,43 @@
 				updateBoardGroups();
 
 				function updateCategories() {
-					categorySelect.selectpicker("refresh");
+					$.ajax({
+						url:"/categories/get",
+						success:function(categoriesJSON) {
+							var categories = JSON.parse(categoriesJSON);
+							function updateColor() {
+								var category = categories[categorySelect.find(":selected").attr("value")];
+								
+								console.log("category UPDATE", category);
+								
+								boardGroupPath.setColor(category.color);
+							}
+
+
+							categorySelect
+							.off("change")
+							.empty()
+							.on("change", function() {
+								updateColor();
+								categorySelect.selectpicker("refresh");
+							});
+
+							for (var key in categories) {
+								var category = categories[key];
+								categorySelect.append(
+									$("<option></option>")
+									.attr("value", category.id)
+									.text(category.name)
+								);
+							}
+							categorySelect.selectpicker("refresh");
+							updateColor();
+
+						},
+						error:function(xhr) {
+							bindFieldInfo.danger(xhr.responseText)
+						}
+					})
 				}
 
 				updateCategories();
@@ -116,16 +153,21 @@
 					$(".modalMenu").css("display", "none")
 					$(target).css("display", "block")
 
+					// show the selector when on the create group tab.
 					if (target === "#create_board_group") {
 						selector.enable();
 					} else {
 						selector.disable();
 					}
+
+					// show the path selected on bidn field when the tab is active
 					if (target === "#bind_field") {
 						boardGroupPath.show();
 					} else {
 						boardGroupPath.hide();
 					}
+
+
 				});
 
 
@@ -164,9 +206,6 @@
 
 		})
 
-			// setTimeout( () => {
-				
-			// }, 100)
 		
 	}
 
