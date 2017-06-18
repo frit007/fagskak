@@ -139,54 +139,6 @@ var GLBoard = GLBoard || function(exports){
 			}
 		},
 
-		// onMouseDown: function(event) {
-		// 	if (event.button === THREE.MOUSE.LEFT) {
-		// 		event.preventDefault();
-		// 		var domElement = this.glRenderer.domElement;
-		// 		var boundingBox;
-				
-		// 		boundingBox = domElement.getBoundingClientRect();
-		// 		this.mouse.x = (event.clientX/ boundingBox.width)*2  - 1 - (boundingBox.left / boundingBox.width)*2;
-		// 		this.mouse.y = -(event.clientY / boundingBox.height)*2 + 1 + (boundingBox.top / boundingBox.height)  * 2;
-
-
-		// 		console.log("mouse", this.mouse);
-		// 		// this.mouse.y = event.clientY;
-
-		// 		this.raycaster.setFromCamera(this.mouse, this.camera);
-
-		// 		var intersects = this.raycaster.intersectObjects(this.brickObjects);
-		// 		console.log(intersects);
-		// 		var color = Math.random() * 0xffffff;
-
-		// 		if (intersects.length > 0) {
-		// 			intersects[0].object.material.color.setHex(color);
-		// 			this.temp = intersects[0].object.material.color.getHexString();
-		// 			this.name = intersects[0].object.name;
-
-		// 			// console.log("!!!");
-		// 		}
-		// 	}
-		// },
-
-		// onTouchStart: function(event) {
-		// 	event.preventDefault();
-
-		// 	event.clientX = event.touches[0].clientX;
-		// 	event.clientY = event.touches[0].clientY;
-		// 	onMouseDown(event);
-		// },
-		// runCustomAnimation: function(nowTime) {
-		// 	var delta = nowTime - this.lastTime;
-		// 	// take a copy waitForNextFrame, so we can clear it before 
-		// 	var copyOfWaitForNextFrame = this.waitForNextFrame;
-		// 	this.waitForNextFrame = [];
-			
-		// 	for (var i = copyOfWaitForNextFrame.length - 1; i >= 0; i--) {
-		// 		// execute all logic that is waiting to be executed, pass the time that has passed and what time it is now
-		// 		copyOfWaitForNextFrame[i](delta, nowTime);
-		// 	}
-		// },
 		getYPosition: function() {
 			return this.getBrick(8,8).meshes[0].position.y;
 		},
@@ -198,9 +150,7 @@ var GLBoard = GLBoard || function(exports){
 
 			var time = this.getTime();
 
-			// run custom animation, might be replaced at some point
-			// this.runCustomAnimation(time);
-
+			
 			// use tween to avoid creating more cusom animations
 			TWEEN.update(time);
 			
