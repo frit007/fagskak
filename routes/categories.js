@@ -24,7 +24,7 @@ module.exports = function(users, categories) {
 	});
 
     router.post('/store', function(req, res) {
-        req.checkBody('name', 'Invalid Name').isAlpha();
+        req.checkBody('name', 'Invalid Name').notEmpty();
         req.checkBody('color', 'Invalid Color').isHexColor();
         req.getValidationResult().then(function(result){
             if (!result.isEmpty()) {
@@ -62,7 +62,7 @@ module.exports = function(users, categories) {
     });
 
     router.post('/update/:id', function(req, res) {
-        req.checkBody('name', 'Invalid Name').isAlpha();
+        req.checkBody('name', 'Invalid Name').notEmpty();
         req.checkBody('color', 'Invalid Color').isHexColor();
         req.getValidationResult().then(function(result){
             if (!result.isEmpty()) {
