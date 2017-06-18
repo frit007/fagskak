@@ -10,7 +10,7 @@ var plus = google.plus('v1');
 var cachedUsers = {};
 
 // requires node js
-module.exports = function(mysql, config) {
+module.exports = function(mysqlPool, config) {
 
 	var oauth2Client = new OAuth2(
 		config.googleOauth.clientId,
@@ -25,7 +25,7 @@ module.exports = function(mysql, config) {
 
 	];
 
-	var User = require('./User')(mysql, config, oauth2Client);
+	var User = require('./User')(mysqlPool, config, oauth2Client);
 
 	var url = oauth2Client.generateAuthUrl({
 		// 'online' (default) or 'offline' (gets refresh_token)
@@ -148,41 +148,45 @@ module.exports = function(mysql, config) {
 					}
 				// console.log("DATA", googleData);
 
-
-				mysql.query('SELECT display_name,id from users as u where u.google_id = ?', [googleData.id], function(err, mysqlResult, fields) {
-					if (err) {
-						callback(err);
-						return;
-					}
-					var profileInfo = {
-						display_name: googleData.displayName,
-						google_id: googleData.id,
-						id: null,
-					}
-					if (mysqlResult.length == 1) {
-						// get the display name if it exists
-						profileInfo.display_name = mysqlResult[0].display_name;
-						
-						profileInfo.id = mysqlResult[0].id;
-
-						callback(null, createCachedUserFromProfileInfo(profileInfo));
-					} else {
-						// if the user profile does not yet exist create it
-						mysql.query('insert into users(display_name,google_id) values(?,?)', 
-						[profileInfo.display_name,profileInfo.google_id],
-						function(err,insertResults,fields) {
-							if (err) {
-								callback(err);
-								return;
-							}
-							// console.log("insertError", err);
-							// console.log("insertResults",insertResults);
-							profileInfo.id = insertResults.insertId;
+				mysqlPool.getConnection((err, connection) => {
+					connection.query('SELECT display_name,id from users as u where u.google_id = ?', [googleData.id], function(err, mysqlResult, fields) {
+						if (err) {
+							connection.release();
+							callback(err);
+							return;
+						}
+						var profileInfo = {
+							display_name: googleData.displayName,
+							google_id: googleData.id,
+							id: null,
+						}
+						if (mysqlResult.length == 1) {
+							// get the display name if it exists
+							profileInfo.display_name = mysqlResult[0].display_name;
 							
-							callback(null, createCachedUserFromProfileInfo(profileInfo));
-						});
-					}
+							profileInfo.id = mysqlResult[0].id;
 
+							connection.release();
+							callback(null, createCachedUserFromProfileInfo(profileInfo));
+						} else {
+							// if the user profile does not yet exist create it
+							connection.query('insert into users(display_name,google_id) values(?,?)', 
+							[profileInfo.display_name,profileInfo.google_id],
+							function(err,insertResults,fields) {
+								connection.release();
+								if (err) {
+									callback(err);
+									return;
+								}
+								// console.log("insertError", err);
+								// console.log("insertResults",insertResults);
+								profileInfo.id = insertResults.insertId;
+								
+								callback(null, createCachedUserFromProfileInfo(profileInfo));
+							});
+						}
+
+					})
 				})
 
 

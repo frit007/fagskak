@@ -1,7 +1,7 @@
 
 var randomstring = require("randomstring");
 
-module.exports = function(mysql, config, oauth2Client) {
+module.exports = function(mysqlPool, config, oauth2Client) {
 
 
     /**
@@ -33,14 +33,18 @@ module.exports = function(mysql, config, oauth2Client) {
          */
         updateName: function(newName, callBack) {
             // escape the name to avoid js injection
-            mysql.query('update users set display_name = ? where id = ?', [newName, this.id], (err) => {
-                if (err) {
-                    callBack(err, false);
-                }
-                var x = this;
-                this.display_name = newName;
-                //this.updateCache();
-                callBack(null, true);
+            mysqlPool.getConnection((err, connection) => {
+                connection.query('update users set display_name = ? where id = ?', [newName, this.id], (err) => {
+                    connection.release();
+                    if (err) {
+                        callBack(err, false);
+                    }
+                    var x = this;
+                    this.display_name = newName;
+                    //this.updateCache();
+                    callBack(null, true);
+                })
+
             })
         },
         
