@@ -54,6 +54,7 @@ function Lobby (owner, options) {
 		color: "#CCCCCC",
 		name: 'Spectators <i class="fa fa-eye" aria-hidden="true"></i>'
 	})
+	
 	this.spectators = this.teams["spectators"];
 
 	setupLobbySockets(this);
