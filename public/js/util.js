@@ -1,5 +1,5 @@
     /**
-     * 
+     * Create element
      * 
      * @param {String} type 
      * @param {HTMLElement} appendTo 

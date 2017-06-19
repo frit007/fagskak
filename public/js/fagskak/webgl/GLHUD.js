@@ -1,19 +1,41 @@
+/**
+ * Create element
+ * 
+ * @param {String} type 
+ * @param {HTMLElement} appendTo 
+ * @param {Object} attributes 
+ * @param {String} text 
+ * @returns 
+ */
+function createElement(type, appendTo, attributes, text) {
+    var ele = document.createElement(type);
+    // ele.className = className;
+    for(var attributeName in attributes) {
+        var attributeValue = attributes[attributeName];
+        ele.setAttribute(attributeName, attributeValue);
+    }
+    appendTo.appendChild(ele);
+
+    if (text) {
+        ele.innerHTML = text;
+    }
+    return ele;
+};
+
 function GLHUD(board) {
-    this.hudCanvas = document.createElement('canvas');
-    this.resize();
-    this.hudBitmap = document.getContext('2d');
-    hudBitmap.font = "Normal 40px Arial";
-    hudBitmap.textAlign = 'center';
-    hudBitmap.fillStyle = "rgba(245,245,245,0.75)";
-    hudBitmap.fillText('Initializing...', width / 2, height / 2);
+    this.board = board;
+    
+    $(board.container).css("position", "relative");
+
+    this.overlay = createElement("div", this.board.container, {'style' : 'position: absolute; width:100%; height: 100%; top:0px; left:0px; pointer-events: none'});
+    createElement("div", this.overlay, {}, "Hello");
 }
 
 GLHUD.prototype = {
-    resize: function() {
-        var boundingBox = this.board.container.getBoundingClientRect();
-        hudCanvas.width = boundingBox.width;
-        hudCanvas.height = boundingBox.height;
-        
-        
+    show: function() {
+        $(this.overlay).show();
+    },
+    hide: function() {
+        $(this.overlay).hide();
     }
 }
