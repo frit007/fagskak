@@ -66,6 +66,7 @@
                     </div>
                 </div>
                 <button class="btn btn-primary" id="configure_board_button">Configure Board</button>
+                <button class="btn btn-success" id="start_game">Start game</button>
 
             </div>
         </div>
@@ -103,7 +104,10 @@
                     </ul>
 
                     <div id="overview_menu" class="tab-pane fade modalMenu in active">
-                        <h3>EMPTY</h3>
+                        Go to the "Bind fields" tab to add a question category<br/>
+                        <br/>
+                        Hover on the group name to isolate a specific group
+                        
                     </div>
                     <div id="bind_field" class="tab-pane fade modalMenu" style="display:none">
                         <div id="bind_fields_info"></div>
@@ -127,7 +131,9 @@
                         </select>
 
                         <h4>Difficulty(1-10)</h4>
-                        <input type="number" class="form-control" min="1" max="10" type="text" value="5">
+                        <input type="number" class="form-control" min="1" max="10" id="difficulty" type="text" value="1">
+
+                        <button class="btn btn-primary btn-block" id="bind_group_button">Add Binding</button>
 
                     </div>
                     <div id="create_board_group" class="tab-pane fade modalMenu" style="display:none">
@@ -168,6 +174,7 @@
 <script src="/js/underscore.js"></script>
 
 <script src="/js/fagskak/webgl/GLHUD.js"></script>
+<script src="/js/lobby/FieldOverview.js"></script>
 {{!--Helpers--}}
 <script src="/js/tween/Tween.js"type="text/javascript"></script>
 <script src="/js/fun/improvedNoise.js" type="text/javascript"></script>
