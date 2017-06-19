@@ -1,10 +1,35 @@
-/**
+/*
  * requires GLPath
+ * requires GLHUD
+ * requires GLBoard
  */
 
-function FieldOverview(board, fieldBindings) {
+
+/**
+ * 
+ * 
+ * @param {GLBoard} board 
+ * @param {{fieldBindings: [FieldBindings,...], allowRemove: bool}} options
+ */
+function FieldOverview(board, options) {
     this.board = board;
-    this.fieldBindings = fieldBindings || [];
+    this.fieldBindings = [];
+
+    options = options || {};
+    
+    this.allowRemove = options.allowRemove || false;
+
+
+    if (options.fieldBindings) {
+        for (var index = 0; index < options.fieldBindings.length; index++) {
+            var fieldBinding = options.fieldBindings[index];
+            this.addFieldBinding(fieldBinding);
+        }        
+    }
+
+
+    this.hud = new GLHUD(board);
+    this.right = createElement("div", this.hud.overlay, {"style": "float: right"});
 }
 
 FieldOverview.prototype = {
@@ -13,9 +38,11 @@ FieldOverview.prototype = {
         this.foreachFieldBinding((fieldBinding) => {
             fieldBinding.path.show();
         });
+        this.hud.show();
     },
     
     hide: function() {
+        this.hud.hide();
         this.foreachFieldBinding((fieldBinding) => {
             fieldBinding.path.hide();
         })
@@ -23,23 +50,56 @@ FieldOverview.prototype = {
     
     foreachFieldBinding: function(func){
         for (var key in this.fieldBindings) {
-            var fieldBinding = this.fieldBinding[key];
+            var fieldBinding = this.fieldBindings[key];
             func(fieldBinding);
         }
     },
     
     add: function(category, difficulty, path) {
-        thid.addFieldBinding(new FieldBinding(category, difficulty, path));
+        this.addFieldBinding(new FieldBinding(category, difficulty, path));
+    },
+
+    removeFieldBinding: function(fieldBinding) {
+        fieldBinding.removeHTML();
+        fieldBinding.path.hide();
+        var index = this.fieldBindings.indexOf(fieldBinding);
+        if (index != -1) {
+            this.fieldBindings.splice(index, 1);
+        }
+        this.show();
     },
     
     addFieldBinding: function(fieldBinding) {
         this.fieldBindings.push(fieldBinding);
+
+
+        fieldBinding.createHTML(this.right, this.allowRemove);
+
+
+        if (this.allowRemove) {
+            fieldBinding.button.addEventListener("click", () => {
+                this.removeFieldBinding(fieldBinding);
+            });            
+        }
+
+
+        fieldBinding.container.addEventListener("mouseenter", () => {
+            this.foreachFieldBinding((otherBinding) => {
+                if (otherBinding !== fieldBinding) {             
+                    otherBinding.path.hide();   
+                }
+            }) 
+        });
+        fieldBinding.container.addEventListener("mouseleave", () =>{
+            this.foreachFieldBinding((otherBinding) => {
+                if (otherBinding !== fieldBinding) {
+                    otherBinding.path.show();   
+                }
+            }) 
+        })
     },
-    
-    showLabels: function() {
-        
-    }
 }
+
 
 
 /**
@@ -57,5 +117,17 @@ function FieldBinding(category, difficulty, path) {
 }
 
 FieldBinding.prototype = {
-
+    createHTML: function(parent, allowRemove) {
+        this.container = createElement("div", parent, {style: "margin:2px", style:"pointer-events: all"});
+        if (allowRemove) {
+            this.button = createElement("i", this.container, {class:"fa fa-window-close fa-2x", "aria-hidden": "true", style:"margin: 3px; cursor: pointer"});        
+        }
+        this.label = createElement("span", this.container, {style: "font-size: 22px; color: " + this.category.color+ "; cursor: help;"}, this.category.name + "(" + this.difficulty + ")");
+        
+    },
+    removeHTML: function() {
+        if (this.container.parentNode) {
+            this.container.parentNode.removeChild(this.container);        
+        }
+    },
 }

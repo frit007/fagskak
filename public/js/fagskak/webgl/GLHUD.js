@@ -28,7 +28,6 @@ function GLHUD(board) {
     $(board.container).css("position", "relative");
 
     this.overlay = createElement("div", this.board.container, {'style' : 'position: absolute; width:100%; height: 100%; top:0px; left:0px; pointer-events: none'});
-    createElement("div", this.overlay, {}, "Hello");
 }
 
 GLHUD.prototype = {

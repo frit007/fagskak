@@ -42,28 +42,74 @@
 					fillScreen: false,
 				});
 
-
+				// initialize overview variables
+				var overview = new FieldOverview(glboard, {allowRemove: true});
+				
+				// initialize bindField variables
 				var boardGroupSelect = $("#board_group");
 				var categorySelect = $("#category");
+				var boardGroupPath = new GLPath(glboard);
+				var categories = {};
+				var boardGroups = {};
+				// convenient getters
+				function getSelectedBoardGroup(){
+					return boardGroups[boardGroupSelect.find(":selected").attr("value")];
+				}
+				function getSelectedCategory(){
+					return categories[categorySelect.find(":selected").attr("value")];
+				}
+
+				// initialize create board variables
+				var selector = new GLBoardSelector(glboard);
 				
 
+
+				// share variables with the window object for debugging purposes
+				window.selector = selector;
+				window.glboard = glboard;
 				window.boardGroupSelect = boardGroupSelect;
-				
-				var boardGroupPath = new GLPath(glboard);
 				window.boardGroupPath = boardGroupPath;
+				// export overview, since it is actually needed 
+				window.overview = overview;
 
 				boardGroupPath.hide();
+
+				$("#bind_group_button").on('click', function() {
+					var boardGroup = getSelectedBoardGroup();
+					var category = getSelectedCategory();
+					var difficulty = $("#difficulty").val();
+					if (!boardGroup) {
+						bindFieldInfo.danger("Please select a valid board group. Or create the board group you need in the 'Create board group' tab");
+						return;
+					}
+					if (!category) {
+						bindFieldInfo.danger("Please select a valid category")
+						return;
+					}
+					if (!difficulty) {
+						bindFieldInfo.danger("Please select a valid difficulty")
+					}
+
+					var selectedPath = new GLPath(glboard, {fields: boardGroup.fields, id: boardGroup.id});
+
+					overview.add(category, difficulty, selectedPath);
+
+					selectedPath.hide();
+
+				});
+
+				// update the board gropus select
 				function updateBoardGroups() {
 					$.ajax({
 						url:"/boards/get",
 						success:function(boardGroupJSON) {
-							var boardGroups = JSON.parse(boardGroupJSON);
+							boardGroups = JSON.parse(boardGroupJSON);
 							window.boardGroups = boardGroups;
 							function updatePath() {
-								var boardGroup = boardGroups[boardGroupSelect.find(":selected").attr("value")];
-								// debugger;
-								console.log("boardGroup UPDATE", boardGroup);
-								boardGroupPath.update(boardGroup.fields, true);
+								var boardGroup = getSelectedBoardGroup();
+								if (boardGroup) {
+									boardGroupPath.update(boardGroup.fields, true);								
+								}
 							}
 
 
@@ -93,20 +139,19 @@
 						}
 					})
 				}
-
 				updateBoardGroups();
 
+				// update the categories select
 				function updateCategories() {
 					$.ajax({
 						url:"/categories/get",
 						success:function(categoriesJSON) {
-							var categories = JSON.parse(categoriesJSON);
+							categories = JSON.parse(categoriesJSON);
 							function updateColor() {
-								var category = categories[categorySelect.find(":selected").attr("value")];
-								
-								console.log("category UPDATE", category);
-								
-								boardGroupPath.setColor(category.color);
+								var category = getSelectedCategory();
+								if (category) {
+									boardGroupPath.setColor(category.color);
+								}
 							}
 
 
@@ -135,42 +180,11 @@
 						}
 					})
 				}
-
 				updateCategories();
+				
 
 
-
-
-				var selector = new GLBoardSelector(glboard)
-
-				window.selector = selector;
-
-				window.glboard = glboard;
-			
-				$('a[data-toggle="tab"].inModal').on('shown.bs.tab', function (e) {
-					var target = $(e.target).attr("href") // activated tab
-					
-					$(".modalMenu").css("display", "none")
-					$(target).css("display", "block")
-
-					// show the selector when on the create group tab.
-					if (target === "#create_board_group") {
-						selector.enable();
-					} else {
-						selector.disable();
-					}
-
-					// show the path selected on bidn field when the tab is active
-					if (target === "#bind_field") {
-						boardGroupPath.show();
-					} else {
-						boardGroupPath.hide();
-					}
-
-
-				});
-
-
+				// create a board group when the create button is clicked
 				$("#create_board_group_button").on('click', function() {
 					var coordinates = selector.getArrayCoordinates();
 
@@ -202,6 +216,37 @@
 					})
 
 				})
+				
+				// listen to tab changes and show the right content on the board
+				$('a[data-toggle="tab"].inModal').on('shown.bs.tab', function (e) {
+					var target = $(e.target).attr("href") // activated tab
+					
+					$(".modalMenu").css("display", "none")
+					$(target).css("display", "block")
+
+					// show the overview group while the overview tab is active
+					if (target == "#overview_menu") {
+						overview.show();
+					} else {
+						overview.hide();
+					}
+					
+					// show the selector when on the create group tab.
+					if (target === "#create_board_group") {
+						selector.enable();
+					} else {
+						selector.disable();
+					}
+
+					// show the path selected on bind field when the tab is active
+					if (target === "#bind_field") {
+						boardGroupPath.show();
+					} else {
+						boardGroupPath.hide();
+					}
+
+
+				});
 			}
 
 		})
