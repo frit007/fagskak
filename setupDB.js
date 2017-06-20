@@ -8,7 +8,7 @@ if (process.argv.length <= 3) {
     var mysqlAdmin = process.argv[2]
     var mysqlAdminPassword = process.argv[3]
 }
-
+console.log("started")
 var status = require('dotenv').config()
 
 if(status.error) {
@@ -46,7 +46,6 @@ var mysqlConnection = mysql.createConnection({
 });
 
 mysqlConnection.connect();
-console.log("DATABASE",config.db.database);
 
 // I could care about mysql injections but i don't since the person who is running the script already has the password
 mysqlConnection.query("DROP DATABASE IF EXISTS "+config.db.database+"; CREATE DATABASE "+config.db.database+" CHARACTER SET utf8 COLLATE utf8_general_ci", function(err, mysqlResult) {
@@ -63,7 +62,6 @@ mysqlConnection.query("DROP DATABASE IF EXISTS "+config.db.database+"; CREATE DA
     
     mysqlConnection.connect();
     
-    console.log("DATABASE",config.db.database);
 
     fs.readFile("db schema.sql", "utf8",function(err, sqlFile) {
         if (err) {
