@@ -71,12 +71,7 @@ GLBoardSelector.prototype = {
      * @returns [[x,z],...] 
      */
     getArrayCoordinates: function() {
-        var coords = [];
-        for (var index = 0; index < this.selected.length; index++) {
-            var brick = this.selected[index];
-            coords.push([brick.x, brick.z]);
-        }
-        return coords;
+        return this.path.getArrayCoordinates();
     },
 
     setupListener: function() {

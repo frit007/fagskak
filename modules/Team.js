@@ -46,7 +46,7 @@ function Team (options) {
 Team.prototype = Object.create(Group.prototype);
 Team.prototype.constructor = Team;
 
-Object.assign(Team.prototype,{
+Object.assign(Team.prototype, {
 
 	
 	getInfo: function() {

@@ -1,11 +1,11 @@
 var Group = require("./Group");
 
 
-function Fagskak(mysql, teams, overview) {
-    this.mysql = mysql;
+function Fagskak(mysqlPool, teams, fieldBindings) {
+    this.mysqlPool = mysqlPool;
     
     this.teams = teams;
-    this.overview = overview;
+    this.fieldBindings = fieldBindings;
 
 	setupLobbySockets(this);
 }
@@ -14,6 +14,8 @@ Fagskak.prototype = Object.create(Group.prototype);
 Fagskak.prototype.constructor = Fagskak;
 
 Object.assign(Fagskak.prototype, {
+	setupFieldBindings: function() {},
+
 	emitTeams: function() {
 		this.emit("teams", this.getTeamInfo());
 	},

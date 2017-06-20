@@ -93,7 +93,7 @@ var lobbyRoutes = require('./routes/lobby')(users, lobbies, fagskakManager);
 var lobbiesRoutes = require('./routes/lobbies')(users, lobbies, fagskakManager);
 var authRoutes = require('./routes/auth')(users);
 var questionRoutes = require('./routes/questions')(users, questions);
-var fagskakRoutes = require('./routes/fagskak')(users, fagskakManager);
+var fagskakRoutes = require('./routes/fagskak')(users, lobbies, fagskakManager);
 var boardRoutes = require('./routes/board')(users, boards);
 var categoriesRoutes = require('./routes/categories')(users, categories);
 

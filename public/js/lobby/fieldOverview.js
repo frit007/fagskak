@@ -98,6 +98,21 @@ FieldOverview.prototype = {
             }) 
         })
     },
+
+    getInfo: function() {
+        return {
+            fields: this.getFieldInfo()
+        }
+    },
+
+    getFieldInfo: function() {
+        var info = [];
+        for(var i = 0; i < this.fieldBindings.length; i++) {
+            var fieldBinding = this.fieldBindings[i];
+            info.push(fieldBinding.getInfo());
+        }
+        return info;
+    }
 }
 
 
@@ -130,4 +145,11 @@ FieldBinding.prototype = {
             this.container.parentNode.removeChild(this.container);        
         }
     },
+    getInfo() {
+        return {
+            category: this.category,
+            difficulty: this.difficulty,
+            fields: this.path.getArrayCoordinates()
+        }
+    }
 }

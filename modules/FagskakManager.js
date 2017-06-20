@@ -32,7 +32,7 @@ module.exports = function(mysqlPool, questions) {
 
         },
 
-        requireGameLobby: function(socket, next)  {
+        requireSocketGame: function(socket, next)  {
             var game = this.getGameFromUser(socket.user);
             if (game === null) {
                 next("Not in game", false);
@@ -41,6 +41,22 @@ module.exports = function(mysqlPool, questions) {
 
                 next();
             }
+        },
+
+        createGame: function(fieldBindings, lobby, callback) {
+            if(!lobby) {
+                callback("You are not in a lobby");
+            }
+            if(!fieldBindings) {
+                callback("Please configure the board before starting the game")
+            }
+            var teams = lobby.getTeamInfo();
+            if(teams.length <= 1) {
+                callback("There have to be atleast one team present.");
+            }
+
+            var game = new Fagskak(mysqlPool, teams, fieldBindings);
+
         }
     }
 }

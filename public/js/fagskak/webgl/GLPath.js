@@ -83,13 +83,11 @@ GLPath.prototype = {
 		for (var p = 0; p < this.particleIndex; p++) {
 			// a place far offscreen, since it is easier than actually deleting them
 			
-			// debugger;
 			var particle = this.particles.vertices[p];
 			particle.x = this.startPlace;
 			particle.z = this.startPlace;
 			particle.y = this.startPlace;
 		}
-		// debugger;
 		// selector.path.particles.rotateX(0)
 
 		// this.particles.verticesNeedUpdate = true;
@@ -108,15 +106,16 @@ GLPath.prototype = {
 
 		// eval("selector.path.particles.rotateX(0)")
 	},
+	
 	hide: function() {
 		this.particleSystem.visible = false;
 	},
+	
 	show: function() {
 		this.particleSystem.visible = true;
 	},
 
 	update: function(bricks, force) {
-		// debugger;
 
 		if (!force && this.bricks.length === bricks.length) {
 			// this is probably going to produce a bug or two, but if the wasn't a change in how many bricks there have been then do not do anything
@@ -185,11 +184,11 @@ GLPath.prototype = {
 				placeParticle(brick.x - 0.25, brick.z + 0.35);
 				placeParticle(brick.x + 0.25, brick.z + 0.35);
 			}
-			
 
 		}
 		this.forceUpdate();
 	},
+	
 	addBricks: function(bricks) {
 		// var originalCount = 
 		for (var index = 0; index < bricks.length; index++) {
@@ -199,6 +198,7 @@ GLPath.prototype = {
 			}
 		}
 	},
+	
 	removeBricks: function(bricks) {
 		for (var index = bricks.length -1; index >= 0; index--) {
 			var brick = bricks[index];
@@ -208,6 +208,7 @@ GLPath.prototype = {
 			}
 		}
 	},
+
 	setColor: function(color) {
 		this.color = color;
 		if (typeof color === "object") {
@@ -216,11 +217,26 @@ GLPath.prototype = {
 			this.particleMaterial.color = new THREE.Color(color);
 		}
 	},
+	
 	copy: function() {
 		var copy =  new GLPath(this.board, this.color);
 		copy.update(this.bricks);
 		return copy;
-	}
+	},
+
+	/**
+     * get bricks coordiantes in array format
+     * 
+     * @returns [[x,z],...] 
+     */
+    getArrayCoordinates: function() {
+        var coords = [];
+        for (var index = 0; index < this.bricks.length; index++) {
+            var brick = this.bricks[index];
+            coords.push([brick.x, brick.z]);
+        }
+        return coords;
+    },
 
 }
 

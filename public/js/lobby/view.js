@@ -148,6 +148,25 @@ $("#new_team").on('click', function() {
     socket.emit("createTeam", {});
 })
 
+$("#start_game", function() {
+    $.ajax({
+        url: "fagskak/create",
+        type: "POST",
+        data: {
+            fields: overview.getFieldInfo()
+        },
+        success: function(msg) {
+
+        },
+        error: function(xhr) {
+            info.danger(xhr.responseText);
+        },
+    })
+    socket.emit('startGame', JSON.stringify({
+        fields: overview.getFieldInfo()
+    }));
+})
+
 // var spectator = new TeamTable({
 //     location: locked_segment,
 //     name: 'Spectators <i class="fa fa-eye" aria-hidden="true"></i>',

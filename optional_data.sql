@@ -3,7 +3,7 @@
 -- Create a few question categories
 INSERT INTO `question_categories` (`name`, `color`) VALUES ('Math', '#ff0000');
 INSERT INTO `question_categories` (`name`, `color`) VALUES ('Programming', '#0000ff');
-INSERT INTO `question_categories` (`name`, `color`) VALUES ('English', '#004000');
+INSERT INTO `question_categories` (`name`, `color`) VALUES ('English', '#9143ba');
 INSERT INTO `question_categories` (`name`, `color`) VALUES ('Danish', '#80ff00');
 INSERT INTO `question_categories` (`name`, `color`) VALUES ('SQL', '#000000');
 
