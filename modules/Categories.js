@@ -4,7 +4,7 @@ module.exports = function(mysqlPool) {
     var Board = {
         create: function(name, color, callback) {
             mysqlPool.getConnection( function(err, connection) {
-                connection.query('INSERT INTO question_categories(name, color) VALUES(?,?)',[name, color], function(err, data){
+                connection.query('INSERT INTO question_categories(name, color) VALUES(?,?)', [name, color], function(err, data){
                     connection.release();
                     if (err) {
                         callback(err);

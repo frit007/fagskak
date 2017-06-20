@@ -24,7 +24,7 @@ module.exports = function(users, categories) {
 	});
 
     router.post('/store', function(req, res) {
-        req.checkBody('name', 'Invalid Name').notEmpty();
+        req.checkBody('name', 'Name can not be empty').notEmpty();
         req.checkBody('color', 'Invalid Color').isHexColor();
         req.getValidationResult().then(function(result){
             if (!result.isEmpty()) {

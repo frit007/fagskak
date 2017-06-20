@@ -7,9 +7,7 @@ var bodyParser = require('body-parser');
 var expressValidator = require('express-validator');
 var expressSession = require('express-session');
 
-if(process.env) {
 
-}
 require('dotenv').config()
 
 
