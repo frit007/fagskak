@@ -198,7 +198,7 @@ var Group = Group || (function() {
             for (var index = this.users.length-1; index >= 0 ; index--) {
                 var user = this.users[index];
                 user.removeFromGroup(this);
-                otherGroup.addToGroup(user);
+                otherGroup.addUser(user);
             }
         },
 

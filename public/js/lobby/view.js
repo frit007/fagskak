@@ -144,27 +144,34 @@ socket.on("teamOptions", function(teamOptions){
     }
 })
 
+socket.on("redirect", function(newlocation) {
+    window.location = newlocation;
+})
+
 $("#new_team").on('click', function() {
     socket.emit("createTeam", {});
 })
 
-$("#start_game", function() {
+$("#start_game").on('click', function() {
+    if (typeof overview === "undefined") {
+        info.danger("Please configure the board before starting the game");
+        return;
+    }
     $.ajax({
-        url: "fagskak/create",
+        url: "fagskak/store",
         type: "POST",
         data: {
-            fields: overview.getFieldInfo()
+            fields: JSON.stringify(overview.getMinimum().fields),
+            movement_limit: $("#movement_limit").val(),
+            time_limit_in_minutes: $("#time_limit_in_minutes").val(),
         },
         success: function(msg) {
-
+            // window.location = "/fagskak";
         },
         error: function(xhr) {
             info.danger(xhr.responseText);
         },
-    })
-    socket.emit('startGame', JSON.stringify({
-        fields: overview.getFieldInfo()
-    }));
+    });
 })
 
 // var spectator = new TeamTable({

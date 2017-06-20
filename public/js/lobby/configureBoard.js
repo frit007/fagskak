@@ -93,6 +93,7 @@
 					var selectedPath = new GLPath(glboard, {fields: boardGroup.fields, id: boardGroup.id});
 
 					overview.add(category, difficulty, selectedPath);
+					bindFieldInfo.success("Added group");
 
 					selectedPath.hide();
 

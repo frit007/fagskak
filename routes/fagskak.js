@@ -18,16 +18,22 @@ module.exports = function(users, lobbies, fagskakManager) {
 		res.render('fagskak', { title: "Fagskak" });
 	});
 
+	/**
+	 * @body {[{categoryId: , difficulty: number, boardGroupId: number},...]} fields
+	 * @body {number} movement_limit
+	 * @body {number} time_limit_in_seconds
+	 */
 	router.post('/store', function(req, res) {
-		var fields = req.body.fields;
-		var lobby = lobbies.getLobbyByUser(req.user);
-		fagskakManager.createGame(fields, lobby, function(err, data) {
+		var fields = JSON.parse(req.body.fields);
+		var movementLimit = req.body.movement_limit;
+		var timeLimitInMinutes = req.body.time_limit_in_minutes;
+		var lobby = lobbies.getLobbyFromUser(req.user);
+		fagskakManager.createGame(fields, lobby, movementLimit, timeLimitInMinutes, function(err, data) {
 			if(err) {
-				res.send(400, err);
+				res.status(400).send(err);
 			} else {
-				res._write("success");
+				res.send("success");
 			}
-
 		});
 	})
 

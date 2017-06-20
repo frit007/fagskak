@@ -45,7 +45,7 @@ CREATE TABLE `board_bindings` (
 	`board_group_id` INT(11) NOT NULL,
 	`game_id` INT(11) NOT NULL,
 	`question_category_id` INT(11) NOT NULL,
-	`weigth` INT(11) NOT NULL,
+	`influence` INT(11) NOT NULL,
 	`difficulty` INT(11) NOT NULL,
 	PRIMARY KEY (`id`)
 );

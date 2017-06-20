@@ -105,6 +105,21 @@ FieldOverview.prototype = {
         }
     },
 
+    getMinimum: function(){
+        return {
+            fields: this.getFieldMinimum()
+        }
+    },
+
+    getFieldMinimum: function() {
+        var info = [];
+        for(var i = 0; i < this.fieldBindings.length; i++) {
+            var fieldBinding = this.fieldBindings[i];
+            info.push(fieldBinding.getMinimum());
+        }
+        return info;
+    },
+
     getFieldInfo: function() {
         var info = [];
         for(var i = 0; i < this.fieldBindings.length; i++) {
@@ -120,7 +135,7 @@ FieldOverview.prototype = {
 /**
  * 
  * 
- * @param {Object}{color, name, id} category 
+ * @param {{color: string, name: string, id:number}} category 
  * @param {Number} difficulty 
  * @param {GLPath} path 
  */
@@ -145,11 +160,23 @@ FieldBinding.prototype = {
             this.container.parentNode.removeChild(this.container);        
         }
     },
-    getInfo() {
+    getInfo: function() {
         return {
             category: this.category,
             difficulty: this.difficulty,
-            fields: this.path.getArrayCoordinates()
+            fields: this.path.getArrayCoordinates(),
+            fieldsId: this.path.id,
+        }
+    },
+    /**
+     * only get the minimum amount of information about the fieldbindings
+     * 
+     */
+    getMinimum: function() {
+        return {
+            categoryId: this.category.id,
+            difficulty: this.difficulty,
+            boardGroupId: this.path.id
         }
     }
 }

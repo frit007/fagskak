@@ -26,8 +26,8 @@ function Team (options) {
 
             color: "#FFFFFF",
 
-			// has to overwritten
-			id: "",
+			// has to be overwritten
+			id: null,
 
             // determine if a team is allowed to play
             playable: true
