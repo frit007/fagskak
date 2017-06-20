@@ -67,8 +67,8 @@ module.exports = function(mysqlPool) {
                         if (typeof boards[row.board_group_id] === "undefined") {
                             boards[row.board_group_id] = {
                                 name: row.name,
+                                id: row.board_group_id,
                                 fields: [],
-                                id: row.board_group_id
                             }
                         }
                         boards[row.board_group_id].fields.push({x: row.x, z: row.z});

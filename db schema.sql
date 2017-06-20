@@ -118,6 +118,7 @@ CREATE TABLE `question_attempts` (
 	`question_id` INT(11) NOT NULL,
 	`called_error` BINARY NOT NULL,
 	`created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	`created_by` INT(11) NOT NULL,
 	PRIMARY KEY (`id`)
 );
 
@@ -189,6 +190,8 @@ ALTER TABLE `board_field_groups` ADD CONSTRAINT `board_field_groups_fk1` FOREIGN
 ALTER TABLE `question_attempts` ADD CONSTRAINT `question_attempts_fk0` FOREIGN KEY (`chosen_answer_id`) REFERENCES `question_answers`(`id`);
 
 ALTER TABLE `question_attempts` ADD CONSTRAINT `question_attempts_fk1` FOREIGN KEY (`question_id`) REFERENCES `questions`(`id`);
+
+ALTER TABLE `question_attempts` ADD CONSTRAINT `question_attempts_fk2` FOREIGN KEY (`created_by`) REFERENCES `users`(`id`);
 
 ALTER TABLE `question_tags_question` ADD CONSTRAINT `question_tags_question_fk0` FOREIGN KEY (`question_tag_id`) REFERENCES `question_tags`(`id`);
 

@@ -4,12 +4,16 @@ var router = express.Router();
 
 // var socketGroup = require('./modules/socketGroup');
 
-module.exports = function(users, lobbies) {
+module.exports = function(users, lobbies, fagskakManager) {
 
 	router.use(users.requireLogin);
 	
 	router.get('/', function(req, res, next) {
 		console.log(req.user.updateName);
+
+		if (fagskakManager.getGameByUser(req.user) !== null) {
+			res.redirect('/fagskak');
+		}
 
 		if (lobbies.getLobbyFromUser(req.user) !== null) {
 			res.redirect("/lobby")

@@ -4,6 +4,7 @@
 	<title>webgl test</title>
 		<link rel='stylesheet' href='/stylesheets/style.css' />
 		<link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap.css">
+		<link rel="stylesheet" type="text/css" href="/stylesheets/font-awesome.min.css">
 
 		<style type="text/css">
 			body {
@@ -27,6 +28,8 @@
 <script src="/js/three/CSS3DRenderer.js" type="text/javascript"></script>
 <script src="/js/underscore.js"></script>
 <script src="/js/fagskak/webgl/GLHUD.js"></script>
+<script src="/js/fagskak/webgl/GLPath.js"></script>
+<script src="/js/lobby/fieldOverview.js"></script>
 <script src="/js/fagskak/Brick.js" type="text/javascript"></script>
 <script src="/js/fagskak/webgl/GLBrick.js" type="text/javascript"></script>
 <script src="/js/fagskak/Figure.js" type="text/javascript"></script>
@@ -60,7 +63,29 @@
 		container: container
 	});
 
-	var hud = GLHUD(glboard);
+	var category = {color: "#FF0000", name: "skak", id: 1}
+	var difficulty = 2;
+	var fields = [{x:5,z:6},{x:5,z:5},{x:5,z:4}]
+	var path = new GLPath(glboard, {id: 1, fields: fields});
+	// path.update(fields);
+	
+	var category2 = {color: "#FF00FF", name: "Math", id: 3}
+	var fields2 = [{x:10,z:6},{x:10,z:5},{x:10,z:4}]
+	var path2 = new GLPath(glboard, {id: 2, fields: fields2});
+
+
+	var fields3 = [{x:6,z:6},{x:6,z:5},{x:6,z:4}]
+	var path3 = new GLPath(glboard, {id: 3, fields: fields3});
+	
+
+
+	var fieldOverview = new FieldOverview(glboard, {allowRemove: true});
+	fieldOverview.add(category, difficulty, path);
+	fieldOverview.add(category2, difficulty, path2)
+	fieldOverview.add({color: "#FFF000", name: "Danish", id:2}, difficulty, path3)
+	
+
+	// var hud = GLHUD(glboard);
 	// var board = new Board({});
 </script>
 </html>

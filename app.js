@@ -7,7 +7,6 @@ var bodyParser = require('body-parser');
 var expressValidator = require('express-validator');
 var expressSession = require('express-session');
 
-
 require('dotenv').config()
 
 
@@ -53,6 +52,8 @@ var mysqlPool = mysql.createPool(config.db);
 var users = require('./modules/users.js')(mysqlPool, config);
 var boards = require('./modules/Boards.js')(mysqlPool);
 var categories = require('./modules/Categories.js')(mysqlPool);
+var questions = require('./modules/Questions.js')(mysqlPool);
+var fagskakManager = require('./modules/FagskakManager.js')(mysqlPool, questions);
 // create a new lobby instance
 var Lobbies = require('./modules/Lobbies');
 var lobbies = new Lobbies();
@@ -88,11 +89,11 @@ var app = express();
 
 var indexRoutes = require('./routes/index');
 var usersRoutes = require('./routes/users')(users);
-var lobbyRoutes = require('./routes/lobby')(users, lobbies);
-var lobbiesRoutes = require('./routes/lobbies')(users, lobbies);
+var lobbyRoutes = require('./routes/lobby')(users, lobbies, fagskakManager);
+var lobbiesRoutes = require('./routes/lobbies')(users, lobbies, fagskakManager);
 var authRoutes = require('./routes/auth')(users);
-var questionRoutes = require('./routes/questions')(users);
-var fagskakRoutes = require('./routes/fagskak')(users);
+var questionRoutes = require('./routes/questions')(users, questions);
+var fagskakRoutes = require('./routes/fagskak')(users, fagskakManager);
 var boardRoutes = require('./routes/board')(users, boards);
 var categoriesRoutes = require('./routes/categories')(users, categories);
 
@@ -197,6 +198,7 @@ var socket = require('socket.io')(server);
 
 require("./sockets/lobbies.js")(users, socket, sessionMiddleware, lobbies);
 require("./sockets/lobby.js")(users, socket, sessionMiddleware, lobbies);
+require("./sockets/fagskak.js")(users, socket, sessionMiddleware, fagskakManager)
 
 // module.exports = app;
 module.exports = server;

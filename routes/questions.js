@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 
-module.exports = function(users) {
+module.exports = function(users, questions) {
 
 	router.use(users.requireLogin);
 
