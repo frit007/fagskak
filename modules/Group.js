@@ -2,6 +2,7 @@ var Group = Group || (function() {
     Group = function() {
         // create a new array so it is not shared among instances
         this.users = [];
+        // store the bound socket functions
 	    this.boundFunctions = {};
         // since we use bind to pass in the user, each function is unique which means we have to store the funcion for every user.
         // stored like [event][user.id]
@@ -33,25 +34,38 @@ var Group = Group || (function() {
             }
         },
 
-        bindEventToUser: function(event, user) {
-            var boundFunction = this.boundFunctions[event];
+        /**
+         * Used internally to reduce redundancy. Binds a event to a user
+         * 
+         * @param {string} eventName 
+         * @param {User} user 
+         */
+        bindEventToUser: function(eventName, user) {
+            var boundFunction = this.boundFunctions[eventName];
             if(typeof boundFunction === "undefined") {
                 throw "The function you are trying to bind is not defined yet."
             }
             if(user && user.socket) {
                 // if the event group does not exist already then create it
-                if(typeof this.userBoundFunctions[event] === "undefined") {
-                    this.userBoundFunctions[event] = {};
+                if(typeof this.userBoundFunctions[eventName] === "undefined") {
+                    this.userBoundFunctions[eventName] = {};
                 }
                 
                 var userBoundFunction = boundFunction.bind(user);
                 
-                this.userBoundFunctions[event][user.id] = userBoundFunction;
+                this.userBoundFunctions[eventName][user.id] = userBoundFunction;
 
-                user.socket.on(event,userBoundFunction);
+                user.socket.on(eventName,userBoundFunction);
             }
         },
 
+        /**
+         * Used internally to reduce redundancy. Removes a event from a user
+         * 
+         * @param {any} event 
+         * @param {any} user 
+         * @returns 
+         */
         unbindEventFromUser: function(event, user) {
             if(!(this.userBoundFunctions[event] && this.userBoundFunctions[event][user.id])) {
                 // don't do anything if the function does not exist for the user
@@ -178,13 +192,14 @@ var Group = Group || (function() {
         /**
          * Transfers all members from this group to another
          * 
-         * @param {any} otherGroup 
+         * @param {Group} otherGroup 
          */
         transferToGroup: function(otherGroup) {
-            this.users.forEach(function(user) {
+            for (var index = this.users.length-1; index >= 0 ; index--) {
+                var user = this.users[index];
                 user.removeFromGroup(this);
-                user.addToGroup(otherGroup);
-            },this)
+                otherGroup.addToGroup(user);
+            }
         },
 
         /**
@@ -192,9 +207,11 @@ var Group = Group || (function() {
          * 
          */
         disband: function() {
-            this.users.forEach(function(user) {
+            for (var index = this.users.length-1; index >= 0 ; index--) {
+                var user = this.users[index];
                 user.removeFromGroup(this);
-            },this)
+                otherGroup.addToGroup(user);
+            }
         }
     };
 
