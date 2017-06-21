@@ -11,7 +11,7 @@ module.exports = function(users, lobbies, fagskakManager) {
 
 
 	router.get('/', function(req, res, next) {
-		if (fagskakManager.getGameByUser(req.user) !== null) {
+		if (fagskakManager.getGameFromUser(req.user) !== null) {
 			res.redirect('/fagskak');
 		}
 
