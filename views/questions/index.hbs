@@ -1,1 +1,101 @@
-<h1>Greetings {{display_name}}</h1>
+<h1>Upload a Question</h1>
+{{#if err}}
+	<div class="alert alert-danger">
+		<strong>Error!</strong> {{err}}
+	</div>
+{{/if}}
+
+{{#if success}}
+    <div class="alert alert-success">
+        Successfuly created question!
+    </div>
+{{/if}}
+
+
+<div class="container clearfix">
+    <div class="row-fluid">
+        <div class="col-xs-12">
+            <form id="form" class="form-horizontal" action="/questions/store" method="post" enctype="multipart/form-data">
+                <fieldset>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="Title"><strong>Question Title:</strong></label>
+                        <div class="col-sm-10">
+                            <input name="Title" type="text" value="{{Title}}" class="form-control" id="Title">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="Category"><strong>Category:</strong></label>
+                        <select name="Category" id="Category" style="padding-right:15px;" value="{{#if Category}} {{Category}}{{else}}error {{/if}}">
+                            <option value="error" >Select a category...</option>
+                            {{#each categories}}
+                                <option value="{{id}}">{{name}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="control-label col-sm-4" for="Image"><strong>Image:</strong></label>
+                        <input name="Image" type="file" id="Image" accept="image/*">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Difficulty"><strong>Difficulty:</strong></label>
+                        <select name="Difficulty" id="Difficulty" style="padding-right:15px;">
+                            <option value="error">...</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <div class="col-sm-10">
+                            </div>
+                            <label class="control-label col-sm-1" for="Correct"><strong>Correct?</strong></label>
+                            <div class="col-sm-1">
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <label class="control-label col-sm-2" for="Answer"><strong>Answers:</strong></label>
+                            <button type="button" class="btn col-sm-1" style="color:green;" onclick="addAnswer()"><i class="fa fa-plus"></i></button>
+
+                            <div class="col-sm-9" id="answerInsert">
+                                
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Upload</button>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>
+<div id="template" class="col-sm-12 template">
+    <div class="col-sm-7">
+        <input type="text" value="{{Answer}}" class="form-control answer" id="Answer">
+    </div>
+    <div class="col-sm-1">
+        <input type="checkbox" class="is_correct"></input>
+    </div>
+    <button type="button" class="btn col-sm-1 remove" style="color: red"><i class="fa fa-minus"></i></button>
+</div>
+<script>
+
+    {{#each Answers}}
+        addAnswer('{{text}}', {{is_correct}});
+    {{/each}}
+
+
+</script>
+<script>
+    var selectedDifficulty = {{#if Difficulty}}{{Difficulty}} {{else}} false {{/if}};
+</script>
+<script>
+    var selectedCategory = {{#if Category}}{{Category}} {{else}} false {{/if}}
+    if(selectedCategory) {
+        $("#Category").val(selectedCategory)
+    }
+</script>
+
+<script src="/js/questions/questions.js"></script>
+

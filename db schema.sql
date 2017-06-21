@@ -137,9 +137,9 @@ ALTER TABLE `questions` ADD CONSTRAINT `questions_fk0` FOREIGN KEY (`question_ca
 
 ALTER TABLE `questions` ADD CONSTRAINT `questions_fk1` FOREIGN KEY (`created_by`) REFERENCES `users`(`id`);
 
-ALTER TABLE `question_answers` ADD CONSTRAINT `question_answers_fk0` FOREIGN KEY (`question_id`) REFERENCES `questions`(`id`);
+ALTER TABLE `question_answers` ADD CONSTRAINT `question_answers_fk0` FOREIGN KEY (`question_id`) REFERENCES `questions`(`id`) ON DELETE CASCADE;
 
-ALTER TABLE `question_views` ADD CONSTRAINT `question_views_fk0` FOREIGN KEY (`question_id`) REFERENCES `questions`(`id`);
+ALTER TABLE `question_views` ADD CONSTRAINT `question_views_fk0` FOREIGN KEY (`question_id`) REFERENCES `questions`(`id`) ON DELETE CASCADE;
 
 ALTER TABLE `moves` ADD CONSTRAINT `moves_fk0` FOREIGN KEY (`game_id`) REFERENCES `games`(`id`);
 
