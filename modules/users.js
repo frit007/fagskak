@@ -149,6 +149,10 @@ module.exports = function(mysqlPool, config) {
 				// console.log("DATA", googleData);
 
 				mysqlPool.getConnection((err, connection) => {
+					if(err) {
+						callback(err);
+						return;
+					}
 					connection.query('SELECT display_name,id from users as u where u.google_id = ?', [googleData.id], function(err, mysqlResult, fields) {
 						if (err) {
 							connection.release();
