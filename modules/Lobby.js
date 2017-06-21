@@ -132,6 +132,13 @@ Object.assign(Lobby.prototype,{
 		}
 	},
 
+	disband: function() {
+		for (var index = 0; index < this.users.length; index++) {
+			var user = this.users[index];
+			this.leave(user);
+		}
+	},
+
 	/**
      * Get a Team from a id
      * 

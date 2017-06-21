@@ -15,7 +15,7 @@ module.exports = function(users, lobbies, fagskakManager) {
 			return;
 		}
 
-		res.render('fagskak', { title: "Fagskak" });
+		res.render('fagskak', { title: "Fagskak", layout: 'layouts/minimum'});
 	});
 
 	/**

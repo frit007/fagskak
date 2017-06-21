@@ -53,7 +53,7 @@ var users = require('./modules/users.js')(mysqlPool, config);
 var boards = require('./modules/Boards.js')(mysqlPool);
 var categories = require('./modules/Categories.js')(mysqlPool);
 var questions = require('./modules/Questions.js')(mysqlPool);
-var fagskakManager = require('./modules/FagskakManager.js')(mysqlPool, questions);
+var fagskakManager = require('./modules/FagskakManager.js')(mysqlPool, questions, users);
 // create a new lobby instance
 var Lobbies = require('./modules/Lobbies');
 var lobbies = new Lobbies();

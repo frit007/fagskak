@@ -12,6 +12,7 @@ CREATE TABLE `groups` (
 	`id` INT(11) AUTO_INCREMENT NOT NULL,
 	`name` VARCHAR(255) NOT NULL,
 	`color` VARCHAR(50) NOT NULL,
+	`is_spectator` tinyint(1) NOT NULL DEFAULT '0',
 	PRIMARY KEY (`id`)
 );
 
@@ -19,6 +20,7 @@ CREATE TABLE `group_users` (
 	`id` INT(11) AUTO_INCREMENT NOT NULL,
 	`user_id` INT(11) NOT NULL,
 	`group_id` INT(11) NOT NULL,
+	`has_left_group` tinyint(1) NOT NULL DEFAULT '0',
 	PRIMARY KEY (`id`)
 );
 
@@ -29,7 +31,7 @@ CREATE TABLE `games` (
 	`deleted_at` TIMESTAMP NULL default null,
 	`movement_limit` INT(11) NOT NULL,
 	`time_limit_in_seconds` INT NOT NULL,
-	`winner` INT(11) NOT NULL,
+	`winner` INT(11) NULL,
 	PRIMARY KEY (`id`)
 );
 

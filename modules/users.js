@@ -204,10 +204,27 @@ module.exports = function(mysqlPool, config) {
 		updateProfile: function(token, data, callback) {
 
 		},
-		
-		getCachedUser: function(authentication) {
-			var user = cachedUsers[authentication];
-			return user;
+
+		/**
+		 * Loads users into cache
+		 * 
+		 * @param {[number,...]} userIds 
+		 * @param {function} callback 
+		 */
+		loadUsersIntoCache: function(userIds, callback) {
+			mysqlPool.query("SELECT * from users where id in ?", [userIds], function(err, rows) {
+				if (err) {
+					return callback(err);
+				}
+				var users = [];
+				for (var i = 0; i < rows.length; i++) {
+					var row = rows[i];
+					var user = new User(row.id, row.display_name);
+					users.push(user);
+					cachedUsers[user.id] = user;
+				}
+				callback(null, users);
+			});
 		},
 
 		requireLogin: function(req, res, next) {
