@@ -51,7 +51,7 @@ module.exports = function(mysqlPool, questions, users) {
 				if (err) {
 					return callback(err);
 				}
-				connection.query("SELECT gameId from games where winner is null", function(err, rows){
+				connection.query("SELECT id from games where winner is null", function(err, rows){
 					if (err) {
 						return callback(err);
 					}
