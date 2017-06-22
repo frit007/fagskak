@@ -23,3 +23,8 @@
 .template {
     display: none;
 }
+
+.bootstrap-select .btn span {
+    text-transform:none;
+}
+

@@ -14,7 +14,7 @@
 
 <div class="container clearfix">
     <div class="row-fluid">
-        <div class="col-xs-12">
+        <div class="col-sm-12">
             <form id="form" class="form-horizontal" action="/questions/store" method="post" enctype="multipart/form-data">
                 <fieldset>
                     <div class="form-group">
@@ -25,42 +25,52 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="Category"><strong>Category:</strong></label>
-                        <select name="Category" id="Category" style="padding-right:15px;" value="{{#if Category}} {{Category}}{{else}}error {{/if}}">
-                            <option value="error" >Select a category...</option>
-                            {{#each categories}}
-                                <option value="{{id}}">{{name}}</option>
-                            {{/each}}
-                        </select>
+                        <label class="control-label col-sm-2" for="Category"><strong>Category:</strong></label>
+                        <div class="col-sm-4">
+                            <select class="selectpicker" name="Category" id="Category" value="{{#if Category}} {{Category}}{{else}}error {{/if}}">
+                                <option value="error" >Select a category...</option>
+                                {{#each categories}}
+                                    <option value="{{id}}">{{name}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="Difficulty"><strong>Difficulty:</strong></label>
+                        <div class="col-sm-2">
+                            <select class="selectpicker" name="Difficulty" id="Difficulty">
+                                <option value="error">...</option>
+                            </select>
+                        </div>
                     </div>
                     
                     <div class="form-group">
-                        <label class="control-label col-sm-4" for="Image"><strong>Image:</strong></label>
-                        <input name="Image" type="file" id="Image" accept="image/*">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="Difficulty"><strong>Difficulty:</strong></label>
-                        <select name="Difficulty" id="Difficulty" style="padding-right:15px;">
-                            <option value="error">...</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <div class="col-sm-12">
-                            <div class="col-sm-10">
-                            </div>
-                            <label class="control-label col-sm-1" for="Correct"><strong>Correct?</strong></label>
-                            <div class="col-sm-1">
+                        <label class="control-label col-sm-2" for="Image"><strong>Image:</strong></label>
+                        <div class="col-sm-10">
+                            <div class="input-group" style="padding-right:15px;">
+                                <label class="input-group-btn">
+                                    <span class="btn btn-primary">
+                                        Browse... <input name="Image" type="file" id="Image" accept="image/*" style="display:none;">
+                                    </span>
+                                </label>
+                                <input type="text" class="form-control" style="margin-left:15px;" readonly>
                             </div>
                         </div>
-                        <div class="col-sm-12">
-                            <label class="control-label col-sm-2" for="Answer"><strong>Answers:</strong></label>
-                            <button type="button" class="btn col-sm-1" style="color:green;" onclick="addAnswer()"><i class="fa fa-plus"></i></button>
+                    </div>
 
-                            <div class="col-sm-9" id="answerInsert">
-                                
-                            </div>
+                    <div class="form-group">
+                        <div class="col-sm-10">
+                        </div>
+                        <label class="control-label col-sm-1" for="Correct"s><strong>Correct?</strong></label>
+                        <div class="col-sm-1">
+                        </div>
+                        
+                        <label class="control-label col-sm-2" for="Answer"><strong>Answers:</strong></label>
+                        <button type="button" class="btn col-sm-1" style="color:green;margin-left:15px; margin-right:-15px;" onclick="addAnswer()"><i class="fa fa-plus"></i></button>
+
+                        <div class="col-sm-9" id="answerInsert">
+                            
                         </div>
                     </div>
 
@@ -70,23 +80,18 @@
         </div>
     </div>
 </div>
-<div id="template" class="col-sm-12 template">
-    <div class="col-sm-7">
+<div id="template" class="col-sm-12 template" style="padding:0;">
+    <div class="col-sm-10" style="padding-left:0;margin-left:15px;margin-right:-15px;padding-right:45px;">
         <input type="text" value="{{Answer}}" class="form-control answer" id="Answer">
     </div>
-    <div class="col-sm-1">
-        <input type="checkbox" class="is_correct"></input>
+    <div class="col-sm-1" style="padding-left:5px;">
+        <div>
+        <input type="checkbox" class="is_correct" style="margin-top:11px;"></input>
+        </div>
     </div>
     <button type="button" class="btn col-sm-1 remove" style="color: red"><i class="fa fa-minus"></i></button>
 </div>
-<script>
 
-    {{#each Answers}}
-        addAnswer('{{text}}', {{is_correct}});
-    {{/each}}
-
-
-</script>
 <script>
     var selectedDifficulty = {{#if Difficulty}}{{Difficulty}} {{else}} false {{/if}};
 </script>
@@ -99,3 +104,14 @@
 
 <script src="/js/questions/questions.js"></script>
 
+<script>
+ {{#if Answers}}
+    {{#each Answers}}
+        addAnswer('{{text}}', {{is_correct}});
+    {{/each}}
+{{else}}
+    addAnswer()
+{{/if}}
+
+
+</script>

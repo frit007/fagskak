@@ -52,12 +52,38 @@ module.exports = function(users, questions, categories) {
 				req.session.Difficulty = fields.Difficulty;
 				req.session.Category = fields.Category;
 				res.redirect("/questions");
+				fs.unlink(files.Image.path); 
+			}
+			if(fields.Title === "") {
+				return putErrorOnSession("Please fill out the title textbox");
 			}
 			if(fields.Category === "error") {
 				return putErrorOnSession("Please select a category");
 			}
+			if(files.Image.type.indexOf("image/") === -1 ) {
+				return putErrorOnSession("Please select an image file");
+			}
 			if(fields.Difficulty === "error") {
 				return putErrorOnSession("Please select a difficulty");
+			}
+			if(Answers.length === 0) {
+				return putErrorOnSession("Please add some answers");
+			}
+			
+			var hasCorrectAnswer = false;
+
+			for (var index = 0; index < Answers.length; index++) {
+				var data = Answers[index];
+				if (data.is_correct) {
+					hasCorrectAnswer = true;
+				}
+				if (data.text === "") {
+					return putErrorOnSession("Please fill out all answer textboxes");
+				}
+			}
+
+			if (hasCorrectAnswer != true) {
+				return putErrorOnSession("Please mark a correct answer");
 			}
 			
 
