@@ -4,7 +4,7 @@ CREATE TABLE `users` (
 	`google_id` VARCHAR(255) NOT NULL,
 	`created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	`updated_at` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-	`is_teacher` BINARY NOT NULL,
+	`is_teacher` tinyint(1) NOT NULL default '0',
 	PRIMARY KEY (`id`)
 );
 
