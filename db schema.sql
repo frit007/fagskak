@@ -131,9 +131,11 @@ CREATE TABLE `question_attempts` (
 
 ALTER TABLE `board_bindings` ADD CONSTRAINT `board_bindings_fk0` FOREIGN KEY (`board_group_id`) REFERENCES `board_groups`(`id`);
 
-ALTER TABLE `board_bindings` ADD CONSTRAINT `board_bindings_fk1` FOREIGN KEY (`game_id`) REFERENCES `games`(`id`);
+ALTER TABLE `board_bindings` ADD CONSTRAINT `board_bindings_fk1` FOREIGN KEY (`game_id`) REFERENCES `games`(`id`) ON DELETE CASCADE;
 
 ALTER TABLE `board_bindings` ADD CONSTRAINT `board_bindings_fk2` FOREIGN KEY (`question_category_id`) REFERENCES `question_categories`(`id`);
+
+ALTER TABLE `game_groups` ADD CONSTRAINT `game_groups_fk1` FOREIGN KEY (`game_id`) REFERENCES `games`(`id`) ON DELETE CASCADE;
 
 ALTER TABLE `questions` ADD CONSTRAINT `questions_fk0` FOREIGN KEY (`question_category_id`) REFERENCES `question_categories`(`id`);
 
@@ -143,7 +145,7 @@ ALTER TABLE `question_answers` ADD CONSTRAINT `question_answers_fk0` FOREIGN KEY
 
 ALTER TABLE `question_views` ADD CONSTRAINT `question_views_fk0` FOREIGN KEY (`question_id`) REFERENCES `questions`(`id`) ON DELETE CASCADE;
 
-ALTER TABLE `moves` ADD CONSTRAINT `moves_fk0` FOREIGN KEY (`game_id`) REFERENCES `games`(`id`);
+ALTER TABLE `moves` ADD CONSTRAINT `moves_fk0` FOREIGN KEY (`game_id`) REFERENCES `games`(`id`) ON DELETE CASCADE;
 
 ALTER TABLE `moves` ADD CONSTRAINT `moves_fk1` FOREIGN KEY (`to_field_id`) REFERENCES `board_fields`(`id`);
 

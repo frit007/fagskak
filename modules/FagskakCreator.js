@@ -62,12 +62,11 @@ module.exports = function(mysqlPool) {
 					return;
 				}
 
-				// start the index at one because if we have one enrtry then 9(insert id) - 1(teamCount) + 1(teamIndex) which would give 9 and that is the number that we need 
-				var teamIndex = 1;
+				var teamIndex = 0;
 				for (var key in teams) {
 					var team = teams[key];
-					// because the the insertId is only the last inserted row and we then subtract the total amount of rows to get the first row id. thereafter we add the current index to get the current id again
-					var groupID = result.insertId - teamCount + teamIndex;
+
+					var groupID = result.insertId + teamIndex;
 					team.options.id = groupID;
 					teamIndex++;
 					// teamsInserted.createGroups.push([team.options.name, team.options.color]);

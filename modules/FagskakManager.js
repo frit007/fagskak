@@ -4,9 +4,10 @@ fagskakGames = [];
 
 module.exports = function(mysqlPool, questions, users) {
 	var FagskakCreator = require("./FagskakCreator.js")(mysqlPool);
-
-	var Fagskak = require("./Fagskak.js")(mysqlPool, questions);
+	var Fagskak = require("./Fagskak.js")(mysqlPool, questions, questions);
+	var FagskakLoader = require("./FagskakLoader.js")(mysqlPool, users);
 	FagskakManager = {
+
 		/**
 		 * Get a fagskak instance by user
 		 * 
@@ -51,12 +52,13 @@ module.exports = function(mysqlPool, questions, users) {
 				if (err) {
 					return callback(err);
 				}
-				connection.query("SELECT id from games where winner is null", function(err, rows){
+				connection.query("SELECT id from games where winner is null", function(err, games){
 					if (err) {
 						return callback(err);
 					}
-					for (var index = 0; index < rows.length; index++) {
-						var row = rows[index];
+					for (var index = 0; index < games.length; index++) {
+						var game = games[index];
+						var fagskakGame = FagskakLoader(game.id);
 					}
 				})
 			});
@@ -104,29 +106,29 @@ module.exports = function(mysqlPool, questions, users) {
 
 			// convert minutes to seconds
 			var timeLimitInSeconds = secondsPerMinutes * timeLimitInMinutes; 
-			game.newFieldBindings(fieldBindings,
-			lobby,
-			movementLimit,
-			timeLimitInSeconds, 
-			function(err, data) {
-				if (err) {
-					callback(err);
-				} else {
-					lobby.transferToGroup(game);
+			// game.newFieldBindings(fieldBindings,
+			// lobby,
+			// movementLimit,
+			// timeLimitInSeconds, 
+			// function(err, data) {
+			// 	if (err) {
+			// 		callback(err);
+			// 	} else {
+			// 		lobby.transferToGroup(game);
 
-					// kill the lobby so nobody is able to join it
-					lobby.options.onDisband();
+			// 		// kill the lobby so nobody is able to join it
+			// 		lobby.options.onDisband();
 		
-					callback(null, data);
+			// 		callback(null, data);
 
 					
-					this.fagskakGames.push(game) ;
+			// 		this.fagskakGames.push(game) ;
 
-					// get everybody to join the game
-					game.emit("redirect", "/fagskak");
+			// 		// get everybody to join the game
+			// 		game.emit("redirect", "/fagskak");
 
-				}
-			});
+			// 	}
+			// });
 
 			FagskakCreator(fieldBindings,
 			lobby,
@@ -138,13 +140,13 @@ module.exports = function(mysqlPool, questions, users) {
 				} else {
 					// lobby.transferToGroup(game);
 					// kill the lobby so nobody is able to join it
-					lobby.options.onDisband();
+					// lobby.options.onDisband();
 
-					lobby.
+					lobby.disband();
 
 					callback(null, data);
 
-					this.fagskakGames.push(game);
+					// this.fagskakGames.push(game);
 
 					// get everybody to join the game
 					game.emit("redirect", "/fagskak");
