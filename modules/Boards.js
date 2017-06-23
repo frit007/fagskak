@@ -2,7 +2,18 @@ var underscore = require("../public/js/underscore");
 
 module.exports = function(mysqlPool) {
     var Board = {
+        /**
+         * 
+         * 
+         * @param {any} name 
+         * @param {[[number, number],...]} fields // or [[x,z],...]
+         * @param {any} callback 
+         */
         create: function(name, fields, callback) {
+            if (!(fields && fields.length)) {
+                callback("You have to insert some fields");
+                return;
+            }
             mysqlPool.getConnection( function(err, connection) {
                 connection.beginTransaction(function(err) {
                     if (err) {
@@ -32,9 +43,9 @@ module.exports = function(mysqlPool) {
                             }
                             connection.commit(function(err) {
                                 if (err) {
+                                    callback(err);
                                     connection.rollback(function(err) {
                                         connection.release();
-                                        callback(err);
                                     })
                                 } else {
                                     connection.release();
