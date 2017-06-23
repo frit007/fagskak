@@ -4,8 +4,7 @@ fagskakGames = [];
 
 module.exports = function(mysqlPool, questions, users) {
 	var FagskakCreator = require("./FagskakCreator.js")(mysqlPool);
-	var Fagskak = require("./Fagskak.js")(mysqlPool, questions, questions);
-	var FagskakLoader = require("./FagskakLoader.js")(mysqlPool, users);
+	var FagskakLoader = require("./FagskakLoader.js")(mysqlPool, users, questions);
 	FagskakManager = {
 
 		/**
@@ -47,6 +46,13 @@ module.exports = function(mysqlPool, questions, users) {
 			}
 		},
 
+		removeGame: function(game) {
+			var index = fagskakGames.indexOf(game);
+			if(index !== -1) {
+				fagskakGames.splice(index, 1);
+			}
+		},
+
 		lookForUnfinishedGames: function(callback){
 			mysqlPool.getConnection(function(err, connection) {
 				if (err) {
@@ -58,7 +64,18 @@ module.exports = function(mysqlPool, questions, users) {
 					}
 					for (var index = 0; index < games.length; index++) {
 						var game = games[index];
-						var fagskakGame = FagskakLoader(game.id);
+						FagskakLoader(game.id, {
+							onDisband: function(){
+								removeGame(game);
+							},
+						},	
+						function(err, game) {
+							if (err) {
+								throw err;
+							} else {
+								fagskakGames.push(game);
+							}
+						});
 					}
 				})
 			});
@@ -101,7 +118,7 @@ module.exports = function(mysqlPool, questions, users) {
 				return;
 			}
 
-			var game = new Fagskak();
+			// var game = new Fagskak();
 			const secondsPerMinutes = 60;
 
 			// convert minutes to seconds
@@ -138,18 +155,34 @@ module.exports = function(mysqlPool, questions, users) {
 				if (err) {
 					callback(err);
 				} else {
+
+
 					// lobby.transferToGroup(game);
 					// kill the lobby so nobody is able to join it
 					// lobby.options.onDisband();
 
-					lobby.disband();
-
-					callback(null, data);
+					
 
 					// this.fagskakGames.push(game);
 
 					// get everybody to join the game
-					game.emit("redirect", "/fagskak");
+					// game.emit("redirect", "/fagskak");
+
+					FagskakLoader(data.gameId, {
+							onDisband: function(){
+								removeGame(game);
+							},
+						},	
+						function(err, game) {
+							if (err) {
+								throw err;
+							} else {
+								fagskakGames.push(game);
+								callback(null, data);
+								lobby.emit("redirect", "/fagskak");
+								lobby.disband();
+							}
+						});
 				}
 			});
 

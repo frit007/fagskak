@@ -2,14 +2,12 @@ var Team = require('./Team.js');
 
 module.exports = function(mysqlPool, users, questions) {
 	var BoardBinding = require('./BoardBinding.js')(mysqlPool);
-	var Fagskak = require('./Fagskak.js')(mysqlPool, questions);
+	var Fagskak = require('./Fagskak.js')(mysqlPool, questions, users);
 
 	/**
-	 * Creates new mysql entries
-	 * 
 	 * 
 	 */
-	return function createFagskakGame(gameId, callback) {
+	return function (gameId, gameOptions, callback) {
 		mysqlPool.query("SELECT * FROM games where id = ?", [gameId], function(err, games) {
 			if (err) {
 				callback(err);
@@ -19,7 +17,7 @@ module.exports = function(mysqlPool, users, questions) {
 			}
 			var game = games[0];
 			mysqlPool.query(
-				"select u.id as user_id, u.display_name as display_name, gr.name as group_name, gr.id as group_id, gr.id as group_color, gr.is_spectator from users as u "+
+				"select u.id as user_id, u.display_name as display_name, gr.name as group_name, gr.id as group_id, gr.color as group_color, gr.is_spectator from users as u "+
 				"join group_users as gu on u.id = gu.user_id and gu.has_left_group = 0 "+
 				"join groups as gr on gr.id = gu.group_id "+
 				"join game_groups as gg on gg.group_id = gr.id "+
@@ -36,7 +34,7 @@ module.exports = function(mysqlPool, users, questions) {
 					var userIds = [];
 					
 					var teams = {};
-					var playingTeams = [];
+					// var playingTeams = [];
 
 					for (var index = 0; index < userResults.length; index++) {
 						var userResult = userResults[index];
@@ -64,9 +62,9 @@ module.exports = function(mysqlPool, users, questions) {
 									color: userResult.group_color,
 								});
 								teams[key] = team;
-								if(!team.is_spectator) {
-									playingTeams.push(team);
-								}
+								// if(!team.is_spectator) {
+								// 	playingTeams.push(team);
+								// }
 							} else {
 								team = teams[key];
 							}
@@ -130,8 +128,9 @@ module.exports = function(mysqlPool, users, questions) {
 										});
 									}
 								}
+								
+								var game = new Fagskak(gameId, boardBindings, teams, gameOptions);
 
-								var game = new Fagskak(boardBindings, teams);
 								callback(null, game);
 							}
 						)

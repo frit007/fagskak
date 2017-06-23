@@ -199,7 +199,7 @@ module.exports = function(mysqlPool, config) {
 		},
 
 		getUserWithId: function(userId) {
-			
+			return cachedUsers[userId];
 		},
 		
 		updateProfile: function(token, data, callback) {

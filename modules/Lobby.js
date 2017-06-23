@@ -133,9 +133,10 @@ Object.assign(Lobby.prototype,{
 	},
 
 	disband: function() {
-		for (var index = 0; index < this.users.length; index++) {
+		// iterate backwards so we can remove all the members
+		for(var index = this.users.length - 1; 0 <= index; index--) {
 			var user = this.users[index];
-			this.leave(user);
+			this.leave(user)
 		}
 	},
 
