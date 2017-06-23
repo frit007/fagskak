@@ -34,12 +34,7 @@ module.exports = function(mysqlPool) {
                         connection.query('INSERT INTO board_field_groups(board_field_id, board_group_id) SELECT bf.id, ? from board_fields as bf where (bf.x,bf.z) in (?) and bf.y = 0',
                         [group.insertId, fields],
                         function(err, data) {
-                            connection.rollback(function(){
-                                connection.release();
-                            })
-                            callback(this.sql);
-                            return;
-                            
+
                             if (err) {
                                 callback(err)
                                 connection.rollback(function() {                                
