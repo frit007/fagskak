@@ -19,3 +19,16 @@
     min-height: 100%;
     border-radius: 0;
 }
+
+.template {
+    display: none;
+}
+
+.bootstrap-select .btn span {
+    text-transform:none;
+}
+
+.hidden {
+    display: none;
+}
+

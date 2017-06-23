@@ -111,6 +111,7 @@ module.exports = function(mysqlPool, config) {
 
 				// check if the user already exists before creating a new one
 				if (cachedUsers[profileInfo.id] !== undefined) {
+					cachedUsers.token = token;
 					return cachedUsers[profileInfo.id];
 				}
 
@@ -198,16 +199,36 @@ module.exports = function(mysqlPool, config) {
 		},
 
 		getUserWithId: function(userId) {
-			
+			return cachedUsers[userId];
 		},
 		
 		updateProfile: function(token, data, callback) {
 
 		},
-		
-		getCachedUser: function(authentication) {
-			var user = cachedUsers[authentication];
-			return user;
+
+		/**
+		 * Loads users into cache if they are not already in it
+		 * 
+		 * @param {[number,...]} userIds 
+		 * @param {function} callback 
+		 */
+		loadUsersIntoCache: function(userIds, callback) {
+			mysqlPool.query("SELECT * from users where id in (?)", [userIds], function(err, rows) {
+				if (err) {
+					return callback(err);
+				}
+				var users = {};
+				for (var i = 0; i < rows.length; i++) {
+					var row = rows[i];
+					if(typeof cachedUsers[row.id] === "undefined") {
+						var user = new User(row.id, row.display_name);
+						cachedUsers[user.id] = user;
+					}
+					// push the cached user into an array so they can be returned
+					users[row.id] = cachedUsers[row.id];
+				}
+				callback(null, users);
+			});
 		},
 
 		requireLogin: function(req, res, next) {

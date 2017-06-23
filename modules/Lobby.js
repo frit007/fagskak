@@ -132,6 +132,14 @@ Object.assign(Lobby.prototype,{
 		}
 	},
 
+	disband: function() {
+		// iterate backwards so we can remove all the members
+		for(var index = this.users.length - 1; 0 <= index; index--) {
+			var user = this.users[index];
+			this.leave(user)
+		}
+	},
+
 	/**
      * Get a Team from a id
      * 

@@ -62,3 +62,5 @@ typings/
 .idea/*
 
 config.json
+
+public/images/uploads/*

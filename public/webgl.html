@@ -16,28 +16,39 @@
 </head>
 <body>
 <div id="fizzytext"></div>
-<div   id="webgl_container"></div>
+<div id="webgl_container"></div>
 </body>	
+<!--Helpers-->
+<script src="/js/fun/improvedNoise.js" type="text/javascript"></script>
+<script src="/js/tween/Tween.js"type="text/javascript"></script>
 <script src="/js/datgui/dat.gui.js" type="text/javascript" ></script>
 <script src="/js/jquery-3.2.0.js" type="text/javascript"></script>
 <script src="/js/bootstrap/bootstrap.min.js" type="text/javascript"></script>
+<script src="/js/underscore.js"></script>
+
+
+<!--THREE-->
 <script src="/js/three.js" type="text/javascript"></script>
+
+
  <!--<script src="http://threejs.org/build/three.min.js"></script> -->
 <script src="/js/OrbitControls/OrbitControls.js"></script>
 <!-- <script src="/js/webgl_test.js" type="text/javascript"></script> -->
 <script src="/js/three/CSS3DRenderer.js" type="text/javascript"></script>
-<script src="/js/underscore.js"></script>
-<script src="/js/fagskak/webgl/GLHUD.js"></script>
+
+<!--UI-->
 <script src="/js/fagskak/webgl/GLPath.js"></script>
+<script src="/js/fagskak/webgl/GLHUD.js"></script>
 <script src="/js/lobby/fieldOverview.js"></script>
+<!--Brick-->
 <script src="/js/fagskak/Brick.js" type="text/javascript"></script>
 <script src="/js/fagskak/webgl/GLBrick.js" type="text/javascript"></script>
+<!--Figure-->
 <script src="/js/fagskak/Figure.js" type="text/javascript"></script>
+<script src="/js/fagskak/webgl/GLFigure.js"></script>
+<!--Board-->
 <script src="/js/fagskak/Board.js" type="text/javascript"></script>
 <script src="/js/fagskak/webgl/GLBoard.js" type="text/javascript"></script>
-<script src="/js/fun/FizzyText.js" type="text/javascript"></script>
-<script src="/js/fun/improvedNoise.js" type="text/javascript"></script>
-<script src="/js/tween/Tween.js"type="text/javascript"></script>
 
 <!--<script src="/js/three/examples/js/renderers/CanvasRenderer.js"></script>
 <script src="/js/three/examples/js/renderers/Projector.js"></script>-->
@@ -63,27 +74,30 @@
 		container: container
 	});
 
-	var category = {color: "#FF0000", name: "skak", id: 1}
-	var difficulty = 2;
-	var fields = [{x:5,z:6},{x:5,z:5},{x:5,z:4}]
-	var path = new GLPath(glboard, {id: 1, fields: fields});
-	// path.update(fields);
+	// var category = {color: "#FF0000", name: "skak", id: 1}
+	// var difficulty = 2;
+	// var fields = [{x:5,z:6},{x:5,z:5},{x:5,z:4}]
+	// var path = new GLPath(glboard, {id: 1, fields: fields});
+	// // path.update(fields);
 	
-	var category2 = {color: "#FF00FF", name: "Math", id: 3}
-	var fields2 = [{x:10,z:6},{x:10,z:5},{x:10,z:4}]
-	var path2 = new GLPath(glboard, {id: 2, fields: fields2});
+	// var category2 = {color: "#FF00FF", name: "Math", id: 3}
+	// var fields2 = [{x:10,z:6},{x:10,z:5},{x:10,z:4}]
+	// var path2 = new GLPath(glboard, {id: 2, fields: fields2});
 
 
-	var fields3 = [{x:6,z:6},{x:6,z:5},{x:6,z:4}]
-	var path3 = new GLPath(glboard, {id: 3, fields: fields3});
+	// var fields3 = [{x:6,z:6},{x:6,z:5},{x:6,z:4}]
+	// var path3 = new GLPath(glboard, {id: 3, fields: fields3});
 	
 
 
-	var fieldOverview = new FieldOverview(glboard, {allowRemove: true});
-	fieldOverview.add(category, difficulty, path);
-	fieldOverview.add(category2, difficulty, path2)
-	fieldOverview.add({color: "#FFF000", name: "Danish", id:2}, difficulty, path3)
+	// var fieldOverview = new FieldOverview(glboard, {allowRemove: true});
+	// fieldOverview.add(category, difficulty, path);
+	// fieldOverview.add(category2, difficulty, path2)
+	// fieldOverview.add({color: "#FFF000", name: "Danish", id:2}, difficulty, path3)
 	
+	// new Figure(5, 2, 5, 'example_three_figure', glboard.glScene, glboard);
+	
+	var figure = new GLFigure(5, 0, 5, glboard, 'pawn7', glboard.glScene);
 
 	// var hud = GLHUD(glboard);
 	// var board = new Board({});

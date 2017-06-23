@@ -53,7 +53,7 @@ var users = require('./modules/users.js')(mysqlPool, config);
 var boards = require('./modules/Boards.js')(mysqlPool);
 var categories = require('./modules/Categories.js')(mysqlPool);
 var questions = require('./modules/Questions.js')(mysqlPool);
-var fagskakManager = require('./modules/FagskakManager.js')(mysqlPool, questions);
+var fagskakManager = require('./modules/FagskakManager.js')(mysqlPool, questions, users);
 // create a new lobby instance
 var Lobbies = require('./modules/Lobbies');
 var lobbies = new Lobbies();
@@ -92,7 +92,7 @@ var usersRoutes = require('./routes/users')(users);
 var lobbyRoutes = require('./routes/lobby')(users, lobbies, fagskakManager);
 var lobbiesRoutes = require('./routes/lobbies')(users, lobbies, fagskakManager);
 var authRoutes = require('./routes/auth')(users);
-var questionRoutes = require('./routes/questions')(users, questions);
+var questionRoutes = require('./routes/questions')(users, questions, categories);
 var fagskakRoutes = require('./routes/fagskak')(users, lobbies, fagskakManager);
 var boardRoutes = require('./routes/board')(users, boards);
 var categoriesRoutes = require('./routes/categories')(users, categories);

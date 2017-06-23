@@ -183,7 +183,7 @@ var GLBoard = GLBoard || function(exports){
 				var sv = new THREE.Mesh( svGEO, textMaterial );
 				sv.rotation.x=4.7
 				sv.rotation.z=4.7
-				sv.position.set(2-1.5, 3, 1-2.0)
+				sv.position.set(2-1.5, -3, 1-2.0)
 				scene.add( sv );
 
 				// NV text
@@ -191,7 +191,7 @@ var GLBoard = GLBoard || function(exports){
 				var nv = new THREE.Mesh( nvGEO, textMaterial );
 				nv.rotation.x=4.7
 				nv.rotation.z=4.7
-				nv.position.set(47-1.5, 3, 1-2.5)
+				nv.position.set(47-1.5, -3, 1-2.5)
 				scene.add( nv );
 
 				// NE text
@@ -199,7 +199,7 @@ var GLBoard = GLBoard || function(exports){
 				var ne = new THREE.Mesh( neGEO, textMaterial );
 				ne.rotation.x=4.7
 				ne.rotation.z=4.7
-				ne.position.set(47-1.5, 3, 45-1.5)
+				ne.position.set(47-1.5, -3, 45-1.5)
 				scene.add( ne );
 
 				// se text
@@ -207,7 +207,7 @@ var GLBoard = GLBoard || function(exports){
 				var se = new THREE.Mesh( seGEO, textMaterial );
 				se.rotation.x=4.7
 				se.rotation.z=4.7
-				se.position.set(2-1.5, 3, 45-1.5)
+				se.position.set(2-1.5, -3, 45-1.5)
 				scene.add( se );
 
 				// window.sv = sv;

@@ -77,7 +77,7 @@ Object.assign(Team.prototype, {
         return info;
     },
 	
-	join: function(user, password) {
+	join: function(user) {
         // remove the user from any teams he is currently in
         for (var index = 0; index < user.groups.length; index++) {
             var group = user.groups[index];

@@ -14,8 +14,12 @@ module.exports = function(users, lobbies, fagskakManager) {
 			res.redirect("/lobbies");
 			return;
 		}
-
-		res.render('fagskak', { title: "Fagskak" });
+		var team = game.getTeamByUser(req.user);
+		if (team.options.playable) {
+			res.render('fagskak/client', { title: "Fagskak", });			
+		} else {
+			res.render('fagskak/spectator', { title: "Fagskak", layout: 'layouts/no_nav'});
+		}
 	});
 
 	/**

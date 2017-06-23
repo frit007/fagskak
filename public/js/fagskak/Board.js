@@ -1,7 +1,9 @@
 
 if (typeof require !== 'undefined') {
-    this.Brick = require('../public/js/Brick');
-    this.Figure = require('../public/js/Figure');
+    var Brick = require('./Brick');
+    var Figure = require('./Figure');
+    var Tween = require('../tween/Tween.js');
+    var THREE = require('../three/build/three.js')
 }
 
 var Board = Board || function(){
@@ -139,9 +141,7 @@ var Board = Board || function(){
         },
         init: function() {
 			glScene = new THREE.Scene();
-            
         },
-        
     }
 
     return Board;

@@ -1,6 +1,7 @@
 
 if (typeof require !== 'undefined') {
-    TWEEN = require("../tween/Tween.js");
+    var TWEEN = require("../tween/Tween.js");
+    var THREE = require('../three/build/three.js')
 }
 
 var Brick = Brick || (function() {
@@ -21,8 +22,8 @@ var Brick = Brick || (function() {
     }
 
     Brick.prototype = {
-		y: 1,
-		height: 1,
+		y: -1,
+		height: -1,
 		lastY:1,
 		yChangeBegin: null,
 		yAnimationDuration:500,
@@ -39,7 +40,7 @@ var Brick = Brick || (function() {
 		// } ),
 		// used to create meshes equivalent to the height
 		_fillHeight: function(){
-			while(this.meshes.length < this.height) {
+			while(this.meshes.length - 2 < this.height) {
 				var brick_geometry = new THREE.BoxGeometry( this.board.boardDim.brickDim.x,this.board.boardDim.brickDim.y,this.board.boardDim.brickDim.z );
 				var brickMaterial;
 				if ((this.z+this.x+this.meshes.length)%2===1) {
@@ -133,18 +134,20 @@ var Brick = Brick || (function() {
                         brick.moveAnimation = null;
                     })
                     .start()
-                }
+                } else {
+
+				}
         },
-		getAnimationProgressAtTime: function(time) {
+		// getAnimationProgressAtTime: function(time) {
 
-			var timeSinceStart = time - this.yChangeBegin;
+		// 	var timeSinceStart = time - this.yChangeBegin;
 
-			var animationProgress = timeSinceStart / this.yAnimationDuration;
-			if (animationProgress > 1) {
-				animationProgress = 1;
-			}
-			return animationProgress;
-		},
+		// 	var animationProgress = timeSinceStart / this.yAnimationDuration;
+		// 	if (animationProgress > 1) {
+		// 		animationProgress = 1;
+		// 	}
+		// 	return animationProgress;
+		// },
 		bindFigure: function(figure) {
 			this.boundFigures.push(figure);
 		},

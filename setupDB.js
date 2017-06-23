@@ -3,11 +3,9 @@
 // node setupDB root root
 
 // the rest of the parameters are taken from the env file
+var mysqlAdmin = process.argv[2]
+var mysqlAdminPassword = process.argv[3]
 
-if (process.argv.length <= 3) {
-    var mysqlAdmin = process.argv[2]
-    var mysqlAdminPassword = process.argv[3]
-}
 console.log("started")
 var status = require('dotenv').config()
 

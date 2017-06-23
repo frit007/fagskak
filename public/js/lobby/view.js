@@ -145,6 +145,7 @@ socket.on("teamOptions", function(teamOptions){
 })
 
 socket.on("redirect", function(newlocation) {
+    console.log("Redirect to", newlocation);
     window.location = newlocation;
 })
 
