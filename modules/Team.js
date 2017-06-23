@@ -54,6 +54,7 @@ Object.assign(Team.prototype, {
 		return {
             name: options.name,
             id: options.id,
+            
             playable: options.playable,
             color: options.color,
             users: this.getUsersInfo()

@@ -151,7 +151,7 @@ ALTER TABLE `moves` ADD CONSTRAINT `moves_fk1` FOREIGN KEY (`to_field_id`) REFER
 
 ALTER TABLE `moves` ADD CONSTRAINT `moves_fk2` FOREIGN KEY (`question_attempt_id`) REFERENCES `question_attempts`(`id`);
 
-ALTER TABLE `moves` ADD CONSTRAINT `moves_fk3` FOREIGN KEY (`group_id`) REFERENCES `game_groups`(`id`);
+ALTER TABLE `moves` ADD CONSTRAINT `moves_fk3` FOREIGN KEY (`group_id`) REFERENCES `games`(`id`);
 
 ALTER TABLE `board_field_groups` ADD CONSTRAINT `board_field_groups_fk0` FOREIGN KEY (`board_field_id`) REFERENCES `board_fields`(`id`);
 
